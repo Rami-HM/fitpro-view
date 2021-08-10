@@ -1,0 +1,14 @@
+.icon {
+  width: 28px;
+  height: 28px;
+  background-color: #efefef;
+  float: left;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.headerBar {
+  background: linear-gradient(90deg, #df9ace, 35%, #615fb9);
+  height: 100%;
+  padding-right: 3vw;
+}

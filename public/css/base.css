@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+.sp_rtc {
+  display: inline-block;
+  overflow: hidden;
+  background: url(https://static.wehago.com/imgs/rtc/sp_rtc.png) 0 0 no-repeat;
+  line-height: 100em;
+  vertical-align: top;
+}
+
+video {
+  width: 100%;
+}
