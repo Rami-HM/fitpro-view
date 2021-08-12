@@ -8,14 +8,19 @@ import { Box, TextField, Button, Heading, Text,CompositeZIndex, FixedZIndex, Lay
 import LoginImg from "../../resource/image/login.png";
 import Register from "./Register";
 
+//redux
+import {useDispatch} from 'react-redux';
+import {actionCreators as memberAction} from '../../redux/modules/member';
+
 function Login() {
   const [userId, setUserId] = useState();
   const [password, setPassword] = useState();
   const [shouldShow, setShouldShow] = React.useState(false);
 
-
   const HEADER_ZINDEX = new FixedZIndex(10);
   const sheetZIndex = new CompositeZIndex([HEADER_ZINDEX]);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // submit 막기
@@ -31,9 +36,12 @@ function Login() {
       if (response.isSuc) {
         setSessionToken(response);
         setSessionUser(response);
+        dispatch(memberAction.setMember(response.user));
         redirect("/");
       } else {
       }
+
+      debugger;
     });
   };
 
@@ -68,7 +76,7 @@ function Login() {
                     onChange={({ value }) => setUserId(value)}
                     placeholder="아이디를 입력 해 주세요"
                     label="id"
-                    value={userId}
+                    value={userId || ''}
                     type="text"
                   />
                 </Box>
@@ -79,7 +87,7 @@ function Login() {
                     onChange={({ value }) => setPassword(value)}
                     label="password"
                     placeholder="비밀번호를 입력 해 주세요"
-                    value={password}
+                    value={password || ''}
                     type="password"
                   />
                   </Box>

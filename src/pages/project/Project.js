@@ -76,7 +76,9 @@ function Project() {
                   {projectInfo.map((item, idx) => {
                     return (
                       <div
-                        className={item.projectId === projectId ? "list-selected" : ""}
+                        className={
+                          item.projectId === projectId ? "list-selected" : ""
+                        }
                         key={item.projectId}
                       >
                         <Box rounding={4} marginBottom={5}>

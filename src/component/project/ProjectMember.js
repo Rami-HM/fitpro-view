@@ -1,137 +1,65 @@
-import React, { useState } from "react";
-import {
-  AvatarGroup,
-  Text,
-  Box,
-  Flex,
-  Layer,
-  Popover,
-  Avatar,
-  IconButton,
-} from "gestalt";
-import MemberModal from "../../pages/member/MemberModal";
+import React, { useState, useEffect } from "react";
+import { AvatarGroup } from "gestalt";
+import ProjectMemberPopover from "./ProjectMemberPopover";
 
 function ProjectMember(props) {
-  const { open, setOpen } = props;
+  const { projectId, setIsProjectMember, isProjectMember } = props;
   const anchorRef = React.useRef(null);
+  const [assignProjectMemberList, setAssignProjectMemberList] = useState([]); //프로젝트 내 할당 된 사용자
 
-  const [isOpenMemberView, setIsOpenMemberView] = useState(false);
+  useEffect(() => {
+    getAssignProjectMemberListAPI();
+    setIsProjectMember(false);
 
-  const [memberIdx, setMemberIdx] = useState(0);
+  }, [projectId]);
 
   const onDismiss = () => {
-    setIsOpenMemberView(false);
+    setIsProjectMember(!isProjectMember);
   };
 
-  const showMemberView = (idx) => {
-    setMemberIdx(idx);
-    setIsOpenMemberView(true);
+  const getAssignProjectMemberListAPI = async () => {
+    setTimeout(() => {
+      const projectMemberList = [
+        {
+          idx: "1",
+          name: "name1",
+          src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
+          projectManager: "true"
+        },
+        {
+          idx: "3",
+          name: "name3",
+          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
+          projectManager: "false"
+        },
+        {
+          idx: "6",
+          name: "name6",
+          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
+          projectManager: "false"
+        },
+      ];
+
+      setAssignProjectMemberList(projectMemberList);
+    }, 10);
   };
-
-  const collaborators = [
-    {
-      idx: 1,
-      name: "Keerthi",
-      src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
-    },
-    {
-      idx: 2,
-      name: "Alberto",
-      src: "https://i.ibb.co/NsK2w5y/Alberto.jpg",
-    },
-    {
-      idx: 3,
-      name: "Shanice",
-      src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-    },
-    {
-      idx: 4,
-      name: "Keerthi",
-      src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
-    },
-    {
-      idx: 5,
-      name: "Alberto",
-      src: "https://i.ibb.co/NsK2w5y/Alberto.jpg",
-    },
-    {
-      idx: 6,
-      name: "Shanice",
-      src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-    },
-  ];
-
-  const List = ({ title }) => (
-    <Flex direction="column" gap={4}>
-      <Text color="darkGray" size="sm">
-        {title}
-      </Text>
-      <Flex direction="column" gap={2}>
-        {collaborators.map((item, index) => (
-          <Flex
-            key={index}
-            alignItems="center"
-            gap={2}
-            onClick={() => showMemberView(item.idx)}
-          >
-            <Flex>
-              <Avatar size="md" name={item.name} src={item.src} />
-              <Text weight="bold">{item.name}</Text>
-              <Flex.Item>
-                <IconButton
-                  accessibilityLabel="This IconButton is an example of IconButton acting as a button"
-                  icon="add"
-                  onClick={() => {}}
-                />
-              </Flex.Item>
-            </Flex>
-          </Flex>
-        ))}
-      </Flex>
-    </Flex>
-  );
 
   return (
     <>
-      {isOpenMemberView ? (
-        <MemberModal onDismiss={onDismiss} mode={"View"} idx={memberIdx} />
-      ) : (
-        ""
-      )}
       <AvatarGroup
         accessibilityLabel="Click to see group collaborators."
         role="button"
-        onClick={() => setOpen((memberOpen) => !memberOpen)}
+        onClick={() => onDismiss()}
         ref={anchorRef}
         size="md"
-        collaborators={collaborators}
+        collaborators={assignProjectMemberList}
       />
-      {open ? (
-        <Layer>
-          <Popover
-            anchor={anchorRef.current}
-            idealDirection="down"
-            onDismiss={() => setOpen(false)}
-            positionRelativeToAnchor={false}
-            size="md"
-          >
-            <Box
-              flex="grow"
-              marginEnd={4}
-              marginStart={4}
-              marginTop={6}
-              marginBottom={8}
-              width={350}
-            >
-              <Flex direction="column" gap={6}>
-                <Text align="center" color="darkGray" weight="bold">
-                  Member
-                </Text>
-                <List title="titititifkfk" />
-              </Flex>
-            </Box>
-          </Popover>
-        </Layer>
+      {isProjectMember ? (
+        <ProjectMemberPopover
+          anchorRef={anchorRef}
+          assignProjectMemberList={assignProjectMemberList}
+          setAssignProjectMemberList={setAssignProjectMemberList}
+        />
       ) : (
         ""
       )}

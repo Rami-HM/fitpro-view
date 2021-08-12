@@ -3,8 +3,8 @@ import { Text, Table, Box } from "gestalt";
 import StarIcon from "@material-ui/icons/Star";
 import StarOutlineIcon from "@material-ui/icons/StarOutline";
 function ProjectList(props) {
+  
   const { projectId, setProjectId } = props;
-
   const [projectInfo, setProjectInfo] = useState([]);
 
   const changeProjectContents = (id) => {

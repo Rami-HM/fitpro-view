@@ -38,18 +38,15 @@ function ProjectContents(props) {
   const { projectId } = props;
 
   const [open, setOpen] = React.useState(false);
-  const [memberOpen, setMemberOpen] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [isDeleteConfirm, setIsDeleteConfirm] = useState(false);
-  
-  //memberList까지 projectMemberList 스테이트 보내서 
-  const [projectMemberList, setProjectMemberList] = useState([]);
-// checked 가 변경 되면 projectMemberList를 변경해서 리랜더링 시키게 만들기.
+  const [isProjectMember, setIsProjectMember] = useState(false);
 
   const onDismiss = () => {
     setIsModal(false);
     setOpen(false);
     setIsDeleteConfirm(false);
+    setIsProjectMember(false);
   };
 
   const [projectContents, setProjectContents] = useState({
@@ -95,7 +92,8 @@ function ProjectContents(props) {
               subtext="subtitle"
               primaryAction={
                 <Flex gap={3}>
-                    <ProjectMember projectId = {projectId} open = {memberOpen} setOpen = {setMemberOpen}/> 
+                    <ProjectMember isProjectMember = {isProjectMember} setIsProjectMember = {setIsProjectMember} projectId = {projectId}/> 
+                    {/* 팀장일경우 */}
                     <ProjectMoreBtn projectId = {projectId} open = {open}  setOpen = {setOpen} setIsModal = {setIsModal} setIsDeleteConfirm = {setIsDeleteConfirm}/> 
                 </Flex>
               }

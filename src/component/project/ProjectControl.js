@@ -2,7 +2,7 @@ import React from 'react'
 import { TapArea, Text, Box, Icon} from "gestalt";
 
 function ProjectControl(props) {
-    const {setIsMemberList, setIsModal, setIsDeleteConfirm} = props;
+    const {setIsModal, setIsDeleteConfirm} = props;
     return (
         <>
         <Box padding={2} column={12} direction="column">
@@ -22,18 +22,6 @@ function ProjectControl(props) {
               color="darkGray"
             />
             <Text>delete</Text>
-          </Box>
-        </TapArea>
-      </Box>
-      <Box padding={2} column={12}>
-        <TapArea rounding={4} onTap={() => setIsMemberList(true)}>
-          <Box alignItems="center" padding={3}>
-            <Icon
-              icon="people"
-              accessibilityLabel="people"
-              color="darkGray"
-            />
-            <Text>member</Text>
           </Box>
         </TapArea>
       </Box>

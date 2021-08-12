@@ -15,8 +15,8 @@ function DashboardTitle() {
     });
 
     useEffect(()=>{
-      console.log("dashboard ---- ")
-      console.log(project);
+    //   console.log("dashboard ---- ")
+    //   console.log(project);
     },[project]);
 
     return (

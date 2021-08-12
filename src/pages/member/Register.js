@@ -1,16 +1,36 @@
 import React, { useState } from "react";
 import { Box, Button, Flex, Sheet, Text, TextField } from "gestalt";
 import ImageUploader from "react-images-upload";
-import axios from '../../config/axios/axios';
+import axios from "../../config/axios/axios";
+import moment from "moment";
 
 function Register(props) {
-  
   const { onDismiss } = props;
   const [pictures, setPictures] = useState([]);
+  const [inputMember, setInputMember] = useState({
+    mem_id: "",
+    mem_pwd: "",
+    mem_name: "",
+    mem_email: "",
+    mem_birth: "",
+    mem_affil: "",
+    mem_profile: "",
+  });
 
   const onDrop = async (picture) => {
     // 여기에 ajax를 넣을 수 있다.
     setPictures(picture);
+  };
+
+  const handleChange = (field) => (e) => {
+    const value = e.value;
+
+    setInputMember((prevInputUser) => {
+      return {
+        ...prevInputUser,
+        [field]: value,
+      };
+    });
   };
 
   const uploadImg = async () => {
@@ -30,10 +50,21 @@ function Register(props) {
     });
   };
 
-  const inserMemberAPI =() =>{
-    uploadImg();
-  }
- 
+  const inserMemberAPI = async () => {
+    await axios({
+      method: "POST",
+      url: "/member/register",
+      data: {
+        ...inputMember,
+        // mem_birth: moment(inputMember.mem_birth).format("YYYY-MM-DD"),
+        mem_birth: new Date(inputMember.mem_birth)
+      },
+    }).then((res) => {
+      console.log(res);
+      uploadImg();
+    });
+  };
+
   return (
     <Sheet
       accessibilityDismissButtonLabel="Close sheet"
@@ -62,7 +93,8 @@ function Register(props) {
           <TextField
             id="id"
             placeholder="아이디를 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_id}
+            onChange={handleChange("mem_id")}
           />
           <TextField
             id="password"
@@ -70,18 +102,21 @@ function Register(props) {
             autoComplete="current-password"
             helperText="영어 대소문자, 특수문자를 포함한 8자 이상"
             placeholder="비밀번호를 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_pwd}
+            onChange={handleChange("mem_pwd")}
           />
           <TextField
             id="name"
             placeholder="이름를 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_name}
+            onChange={handleChange("mem_name")}
           />
           <TextField
             id="email"
             type="email"
             placeholder="이메일을 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_email}
+            onChange={handleChange("mem_email")}
           />
         </Flex>
         <Flex direction="column" gap={4}>
@@ -95,12 +130,14 @@ function Register(props) {
             id="birth"
             type="date"
             placeholder="생년월일을 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_birth}
+            onChange={handleChange("mem_birth")}
           />
           <TextField
             id="affil"
             placeholder="소속을 입력하세요."
-            onChange={() => {}}
+            value={inputMember.mem_affil}
+            onChange={handleChange("mem_affil")}
           />
         </Flex>
         <Flex direction="column" gap={4}>

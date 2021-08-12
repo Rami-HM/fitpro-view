@@ -16,7 +16,7 @@ function Header() {
       {isModal ? (
         <MemberModal onDismiss={onDismiss} mode={"Modify"} />
       ) : (
-        <Flex alignItems="center" justifyContent="center" gap={2} width="100%">
+        <Flex alignItems="center" justifyContent="center" gap={3} width="100%">
           <Flex.Item flex="grow">
             <Heading size="sm" color="white"></Heading>
           </Flex.Item>
@@ -37,8 +37,6 @@ function Header() {
                 </Flex.Item>
               </Flex>
             </Link>
-            <div style={{ marginRight: "10px" }}></div>
-            <div style={{ marginTop: "3px" }}></div>
           </Flex.Item>
         </Flex>
       )}
