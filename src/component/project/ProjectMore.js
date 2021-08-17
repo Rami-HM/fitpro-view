@@ -1,24 +1,15 @@
 import React, { useState } from "react";
-import {
-  Text,
-  Box,
-  Icon,
-  TapArea,
-  Popover,
-  Tooltip,
-  IconButton,
-} from "gestalt";
+import { Popover, Tooltip, IconButton } from "gestalt";
 import ProjectControl from "./ProjectControl";
 
 function ProjectMoreBtn(props) {
-  const { open, setOpen, setIsModal, setIsDeleteConfirm, projectId } = props;
+  const { open, setOpen } = props;
   const anchorRef = React.useRef(null);
 
   const onDismiss = () => {
     setOpen(false);
-    setIsModal(false);
-    setIsDeleteConfirm(false);
   };
+
   return (
     <>
       <Tooltip idealDirection="up" text="Board options">
@@ -44,10 +35,7 @@ function ProjectMoreBtn(props) {
           size="flexible"
           role="menu"
         >
-          <ProjectControl
-            setIsModal={setIsModal}
-            setIsDeleteConfirm={setIsDeleteConfirm}
-          />
+          <ProjectControl />
         </Popover>
       ) : (
         ""

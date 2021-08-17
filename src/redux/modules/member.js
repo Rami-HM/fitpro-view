@@ -1,7 +1,7 @@
 const SET_MEMBER = "SET_MEMBER";
 
 const initialState = {
-  SET_MEMBER: {},
+  member: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,8 +21,7 @@ const setMember = (member) => {
 };
 
 const applySetMember = (state, action) => {
-  const { member } = state;
-
+  const { member } = action;
   return {
     ...state,
     member,

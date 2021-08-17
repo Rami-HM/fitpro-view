@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Text, Box, Flex, Popover, IconButton } from "gestalt";
 import ProjectMemberList from "./ProjectMemberList";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "../../config/axios/axios";
+
+import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function ProjectMemberPopover(props) {
-  const { anchorRef, assignProjectMemberList, setAssignProjectMemberList } =
-    props;
+  const project = useSelector((state) => state.project.project);
+  const userSession = useSelector((state) => state.member.member);
+
+  const { anchorRef, onDismiss } = props;
+
+  const [assignProjectMemberList, setAssignProjectMemberList] = useState(
+    project.project_assign
+  );
 
   const [memberList, setMemberList] = useState([]); //전체 사용자
 
@@ -15,8 +25,15 @@ function ProjectMemberPopover(props) {
   const [assign, setAssign] = useState(false);
   const [changeMember, setChangeMember] = useState();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    getMemberList();
+    if(userSession.mem_idx === project.readeridx)
+      getMemberList();
+
+    return(()=>{
+      onDismiss();
+    })
   }, []);
 
   useEffect(() => {
@@ -24,72 +41,66 @@ function ProjectMemberPopover(props) {
   }, [changeMember]);
 
   const getMemberList = async () => {
-    setTimeout(() => {
-      const totmemberList = [
-        {
-          idx: "1",
-          name: "name1",
-          src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
-        },
-        {
-          idx: "2",
-          name: "name2",
-          src: "https://i.ibb.co/NsK2w5y/Alberto.jpg",
-        },
-        {
-          idx: "3",
-          name: "name3",
-          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-        },
-        {
-          idx: "4",
-          name: "name4",
-          src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
-        },
-        {
-          idx: "5",
-          name: "name5",
-          src: "https://i.ibb.co/NsK2w5y/Alberto.jpg",
-        },
-        {
-          idx: "6",
-          name: "name6",
-          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-        },
-      ];
-
+    axios({
+      method: "GET",
+      url: "/member/list",
+    }).then((res) => {
+      const totmemberList = res.data;
       const filteringMemberList = totmemberList.filter((memberInfo) => {
         return !assignProjectMemberList.some(
-          (projectMemberInfo) => projectMemberInfo.idx === memberInfo.idx
+          (projectMemberInfo) =>
+            projectMemberInfo.mem_idx === memberInfo.mem_idx
         )
-          ? memberInfo
+          ? { ...memberInfo, readeryn: false }
           : "";
       });
-
       setMemberList(totmemberList);
       setNotAssignProjectMemberList(filteringMemberList);
-    }, 10);
+    });
   };
 
-  const assignMember = (changeMember) => {
-    const newAssignMemberList = assignProjectMemberList.filter(
-      (member) => member.idx !== changeMember.idx
+  const assignMember = async (changeMember) => {
+    const newAssignMemberList = await assignProjectMemberList.filter(
+      (member) => member.mem_idx !== changeMember.mem_idx
     );
-    const newNotAssignMemberList = [
+    const newNotAssignMemberList = await [
       ...notAssignProjectMemberList,
       changeMember,
     ];
     setAssignProjectMemberList(newAssignMemberList);
     setNotAssignProjectMemberList(newNotAssignMemberList);
   };
-  const notAssignMember = (changeMember) => {
+  const notAssignMember = async (changeMember) => {
     if (changeMember == null) return;
-    const newAssignMemberList = [...assignProjectMemberList, changeMember];
-    const newNotAssignMemberList = notAssignProjectMemberList.filter(
-      (member) => member.idx !== changeMember.idx
+    const newAssignMemberList = await [
+      ...assignProjectMemberList,
+      changeMember,
+    ];
+    const newNotAssignMemberList = await notAssignProjectMemberList.filter(
+      (member) => member.mem_idx !== changeMember.mem_idx
     );
     setAssignProjectMemberList(newAssignMemberList);
     setNotAssignProjectMemberList(newNotAssignMemberList);
+  };
+
+  const saveProjectAssignAPI = () => {
+    axios({
+      method: "PATCH",
+      url: "/project/member/" + project.prj_idx,
+      data: {
+        assignProjectMemberList,
+        reg_mem_idx: userSession.mem_idx,
+      },
+    }).then(async (res) => {
+      const newProject = await {
+        ...project,
+        project_assign: res.data.data,
+      };
+      dispatch(projectAction.setProject(newProject));
+      dispatch(projectAction.modifyProjectList(newProject));
+
+      onDismiss();
+    });
   };
 
   return (
@@ -110,7 +121,18 @@ function ProjectMemberPopover(props) {
       >
         <Flex justifyContent="end">
           <Flex.Item>
-            <IconButton size="xs" bgColor="lightGray" iconColor="red" icon="check"></IconButton>
+            {userSession.mem_idx === project.readeridx ? (
+              <IconButton
+                accessibilityLabel="save"
+                size="xs"
+                bgColor="lightGray"
+                iconColor="red"
+                icon="check"
+                onClick={saveProjectAssignAPI}
+              ></IconButton>
+            ) : (
+              <></>
+            )}
           </Flex.Item>
         </Flex>
         <Flex direction="column" gap={6}>
@@ -123,19 +145,26 @@ function ProjectMemberPopover(props) {
           </Flex>
 
           <ProjectMemberList
-            assign
+            assign = {true}
             list={assignProjectMemberList}
             title="배정된 팀원"
             setChangeMember={setChangeMember}
             setAssign={setAssign}
           />
-          {/* 팀장일경우 */}
-          <ProjectMemberList
-            list={notAssignProjectMemberList}
-            title="미배정 팀원"
-            setChangeMember={setChangeMember}
-            setAssign={setAssign}
-          />
+          {
+            /* 팀장일경우 */
+            userSession.mem_idx === project.readeridx ? (
+              <ProjectMemberList
+                assign = {false}
+                list={notAssignProjectMemberList}
+                title="미배정 팀원"
+                setChangeMember={setChangeMember}
+                setAssign={setAssign}
+              />
+            ) : (
+              <></>
+            )
+          }
         </Flex>
       </Box>
     </Popover>

@@ -1,58 +1,41 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  IconButton,
-  ScrollBoundaryContainer,
-  Text,
-  TapArea,
-} from "gestalt";
+import { Box, IconButton, ScrollBoundaryContainer } from "gestalt";
 import ProjectSheet from "./ProjectSheet";
-//import ProjectList from "./ProjectList";
 import ProjectContents from "./ProjectContents";
-import StarIcon from "@material-ui/icons/Star";
-import StarOutlineIcon from "@material-ui/icons/StarOutline";
-function Project() {
-  const [projectId, setProjectId] = useState(0);
+import { useSelector } from "react-redux";
+import ProjectInfo from "../../component/project/ProjectInfo";
+import axios from "../../config/axios/axios";
+
+//redux
+import { useDispatch } from "react-redux";
+import { actionCreators as projectAction } from "../../redux/modules/project";
+
+
+function Project(props) {
   const [isProjectModal, setIsProjectModal] = useState(false);
+
+  const projectList = useSelector((state) => state.project.projectList);
+  const userSession = useSelector((state) => state.member.member);
+
+  const dispatch = useDispatch();
 
   const onDismiss = () => {
     setIsProjectModal(false);
   };
 
-  const [projectInfo, setProjectInfo] = useState([]);
-  const changeProjectContents = (id) => {
-    setProjectId(id);
-  };
-
-  useEffect(() => {
-    projectListAPI();
-  }, []);
-
-  const projectListAPI = () => {
-    setTimeout(() => {
-      setProjectInfo([
-        {
-          bookmark: true,
-          projectId: "1",
-          projectName: "projectName1",
-        },
-        {
-          bookmark: false,
-          projectId: "2",
-          projectName: "projectName2",
-        },
-        {
-          bookmark: false,
-          projectId: "3",
-          projectName: "projectName3",
-        },
-        {
-          bookmark: false,
-          projectId: "4",
-          projectName: "projectName4",
-        },
-      ]);
-    }, 1000);
+  const getProjectListAPI = async () => {
+    try {
+      await axios({
+        method: "GET",
+        url: "/project/list/" + userSession.mem_idx,
+      }).then((res) => {
+        if (res.data.length > 0) {
+          dispatch(projectAction.setProjectList(res.data));
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -73,44 +56,13 @@ function Project() {
             <Box column={12}>
               <ScrollBoundaryContainer height="80vh">
                 <Box padding={5}>
-                  {projectInfo.map((item, idx) => {
+                  {projectList.map((item, idx) => {
                     return (
-                      <div
-                        className={
-                          item.projectId === projectId ? "list-selected" : ""
-                        }
-                        key={item.projectId}
-                      >
-                        <Box rounding={4} marginBottom={5}>
-                          <div className={"ALa ho-"}>
-                            <TapArea
-                              rounding={4}
-                              onTap={() =>
-                                changeProjectContents(item.projectId)
-                              }
-                            >
-                              <Box
-                                alignItems="center"
-                                display="flex"
-                                padding={3}
-                              >
-                                <Box column={2}>
-                                  {item.bookmark ? (
-                                    <StarIcon style={{ color: "orange" }} />
-                                  ) : (
-                                    <StarOutlineIcon
-                                      style={{ color: "gray" }}
-                                    />
-                                  )}
-                                </Box>
-                                <Box column={10}>
-                                  <Text weight="bold">{item.projectName}</Text>
-                                </Box>
-                              </Box>
-                            </TapArea>
-                          </div>
-                        </Box>
-                      </div>
+                      <ProjectInfo
+                        projectInfo={item}
+                        key={item.prj_idx}
+                        getProjectListAPI={getProjectListAPI}
+                      />
                     );
                   })}
                 </Box>
@@ -120,7 +72,7 @@ function Project() {
           <Box column={9} paddingX={5}>
             <div className={"ALa ho-"} style={{ height: "90%", padding: "3%" }}>
               <ScrollBoundaryContainer height="80vh">
-                <ProjectContents projectId={projectId} />
+                <ProjectContents/>
               </ScrollBoundaryContainer>
             </div>
           </Box>

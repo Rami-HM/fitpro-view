@@ -1,47 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { AvatarGroup } from "gestalt";
 import ProjectMemberPopover from "./ProjectMemberPopover";
+import { useSelector } from "react-redux";
 
 function ProjectMember(props) {
-  const { projectId, setIsProjectMember, isProjectMember } = props;
+
+  const [isProjectMember, setIsProjectMember] = useState(false);
   const anchorRef = React.useRef(null);
-  const [assignProjectMemberList, setAssignProjectMemberList] = useState([]); //프로젝트 내 할당 된 사용자
+  const project = useSelector((state) => state.project.project);
 
   useEffect(() => {
-    getAssignProjectMemberListAPI();
     setIsProjectMember(false);
 
-  }, [projectId]);
+  }, [project]);
 
   const onDismiss = () => {
     setIsProjectMember(!isProjectMember);
-  };
-
-  const getAssignProjectMemberListAPI = async () => {
-    setTimeout(() => {
-      const projectMemberList = [
-        {
-          idx: "1",
-          name: "name1",
-          src: "https://i.ibb.co/ZfCZrY8/keerthi.jpg",
-          projectManager: "true"
-        },
-        {
-          idx: "3",
-          name: "name3",
-          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-          projectManager: "false"
-        },
-        {
-          idx: "6",
-          name: "name6",
-          src: "https://i.ibb.co/7tGKGvb/shanice.jpg",
-          projectManager: "false"
-        },
-      ];
-
-      setAssignProjectMemberList(projectMemberList);
-    }, 10);
   };
 
   return (
@@ -52,13 +26,12 @@ function ProjectMember(props) {
         onClick={() => onDismiss()}
         ref={anchorRef}
         size="md"
-        collaborators={assignProjectMemberList}
+        collaborators={project.project_assign || []}
       />
       {isProjectMember ? (
         <ProjectMemberPopover
           anchorRef={anchorRef}
-          assignProjectMemberList={assignProjectMemberList}
-          setAssignProjectMemberList={setAssignProjectMemberList}
+          onDismiss = {onDismiss}
         />
       ) : (
         ""

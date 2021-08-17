@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getSessionToken} from '../../actions/session/session';
+import {getSessionToken,logout} from '../../actions/session/session';
 import {SERVER_URL} from '../constants/commonConts';
 /*
     axios 인스턴스를 생성합니다.
@@ -12,18 +12,19 @@ const instance = axios.create({
     headers: {
         'Content-Type':'application/json',
     } 
-  });
-
+});
 /*
-    1. 요청 인터셉터를 작성합니다.
-    2개의 콜백 함수를 받습니다.
+1. 요청 인터셉터를 작성합니다.
+2개의 콜백 함수를 받습니다.
 
-    1) 요청 바로 직전 - 인자값: axios config
-    2) 요청 에러 - 인자값: error
+1) 요청 바로 직전 - 인자값: axios config
+2) 요청 에러 - 인자값: error
 */
+
 instance.interceptors.request.use(
     async function(config) {
-        // 요청 바로 직전
+        document.body.classList.add('loading-indicator');
+           // 요청 바로 직전
         // axios 설정값에 대해 작성합니다.
         const tokenValue = await getSessionToken();
 
@@ -32,6 +33,7 @@ instance.interceptors.request.use(
         return config;
     }, 
     function (error) {
+        document.body.classList.remove('loading-indicator');
         // 요청 에러 처리를 작성합니다.
         return Promise.reject(error);
     }
@@ -48,6 +50,7 @@ instance.interceptors.request.use(
 // */
 instance.interceptors.response.use(
     async function (response) {
+        
     /*
         http status가 200인 경우
         응답 바로 직전에 대해 작성합니다. 
@@ -58,19 +61,26 @@ instance.interceptors.response.use(
         //오류 일 시 해당 data안에 statusCode 를 포함하여 보냄.
 
         //결과 값이 200이 아닌 값으로 넘어 온 경우
+        console.log(response);
         let data = response.data;
         let isSuc = false;
+
+        if(data.statusCode === 403) // token 만료
+            logout();
+
         if(data.statusCode || response.status >= 400){
             data = await {...data, error : (data.error ? data.error : '오류가 발생하였습니다.')};
         }else{
             isSuc = true;
-            data = await {...data,statusCode : response.status}
+            //data = await {...data,statusCode : response.status}
         }
         response = await{...response,data, isSuc};
+        document.body.classList.remove('loading-indicator');
         return response;
     },
 
     function (error) {
+        document.body.classList.remove('loading-indicator');
     /*
         http status가 200이 아닌 경우
         응답 에러 처리를 작성합니다.

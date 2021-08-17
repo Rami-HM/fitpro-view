@@ -1,8 +1,12 @@
 import React from "react";
 import { Box, Sheet } from "gestalt";
 import ProjectForm from "../../component/project/ProjectForm";
+import { useSelector } from "react-redux";
 
 function ProjectModal(props) {
+
+  const project = useSelector(state=>state.project.project);
+
   const { onDismiss, mode } = props;
 
   return (
@@ -11,8 +15,8 @@ function ProjectModal(props) {
       accessibilitySheetLabel="reation for new one"
       heading={
         {
-          Insert: '추가중입니다?',
-          Modify: '수정중입니다..',
+          Insert: '프로젝트를 추가해보세요!',
+          Modify: `${project.prj_title}`,
         }[mode]
       }
       onDismiss={onDismiss}
@@ -21,8 +25,8 @@ function ProjectModal(props) {
       <Box paddingX={8}>
         {
           {
-            Insert: <ProjectForm mode={mode} />,
-            Modify: <ProjectForm mode={mode} />,
+            Insert: <ProjectForm onDismiss = {onDismiss} mode={mode} />,
+            Modify: <ProjectForm onDismiss = {onDismiss} mode={mode} />,
           }[mode]
         }
       </Box>

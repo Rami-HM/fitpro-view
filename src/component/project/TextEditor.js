@@ -6,8 +6,12 @@ import { SERVER_URL } from "../../config/constants/commonConts";
 import axios from "../../config/axios/axios";
 
 function TextEditor(props) {
-  const { setContents } = props;
+  const { setContents, contents } = props;
   const editorRef = useRef();
+
+  useEffect(()=>{
+    editorRef.current.getInstance().setMarkdown(contents);
+  },[contents])
 
   //이미지를 자동으로 base64로 변환을
   //서버에 파일 저장 후 url로 리턴 으로 변경
@@ -27,7 +31,6 @@ function TextEditor(props) {
               data: formData,
               headers: { "Content-Type": "multipart/form-data" },
             }).then((res) => {
-              console.log(res.data.data.files);
               callback(`${SERVER_URL}` + res.data.data.files[0], blob.name);
             });
           })();
@@ -43,13 +46,13 @@ function TextEditor(props) {
     <>
       <Editor
         usageStatistics={false}
-        initialValue=""
+        initialValue={contents}
         previewStyle="tab"
         height="600px"
-        initialEditType="wysiwyg"
+        initialEditType="markdown"
         useCommandShortcut={true}
         onChange={() => {
-          const innerTxt = editorRef.current.getInstance().getHTML();
+          const innerTxt = editorRef.current.getInstance().getMarkdown();
           setContents(innerTxt);
         }}
         ref={editorRef}

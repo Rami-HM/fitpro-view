@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Flex,
@@ -10,19 +10,21 @@ import {
   Layer,
 } from "gestalt";
 
-function Confirm(props) {
-  const { title, contents, onDismiss, onClick } = props;
+import { ALERT_TITLE } from "../../config/constants/commonConts";
+
+function Alert(props) {
+  const { contents, onDismiss } = props;
   const HEADER_ZINDEX = new FixedZIndex(10);
   const zIndex = new CompositeZIndex([HEADER_ZINDEX]);
 
-  useEffect(()=>{
+  const [title, setTitle] = useState(props.title);
 
-    console.log("?")
-    // return(()=>{
-    //   onDismiss();
-    // });
-
-  },[]);
+  useEffect(() => {
+    if (!title) setTitle(ALERT_TITLE);
+    return () => {
+      onDismiss();
+    };
+  }, []);
 
   return (
     <Layer zIndex={zIndex}>
@@ -32,12 +34,7 @@ function Confirm(props) {
         onDismiss={onDismiss}
         footer={
           <Flex justifyContent="end" gap={2}>
-            <Button
-              color="gray"
-              text="취소"
-              onClick={onDismiss}
-            />
-            <Button color="red" text="확인" onClick = {onClick}/>
+            <Button color="red" text="확인" onClick={onDismiss} />
           </Flex>
         }
         size="sm"
@@ -52,4 +49,4 @@ function Confirm(props) {
   );
 }
 
-export default Confirm;
+export default Alert;

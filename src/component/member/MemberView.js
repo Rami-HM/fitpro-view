@@ -1,31 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Mask, Avatar, Button, Datapoint } from "gestalt";
 import { SERVER_URL } from "../../config/constants/commonConts";
+import axios from "../../config/axios/axios";
 
 function MemberView(props) {
   const { idx, onDismiss } = props;
   const [member, setMember] = useState({
-    idx: "",
-    id: "",
-    name: "",
-    email: "",
-    birth: "",
-    affli: "",
-    url: "",
+    mem_idx: "",
+    mem_id: "",
+    mem_name: "",
+    mem_email: "",
+    mem_birth: "",
+    mem_affli: "",
+    mem_profile: "",
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      setMember({
-        idx: "1",
-        id: "test",
-        name: "테스트",
-        email: "test@naver.com",
-        birth: "1999/01/01",
-        affli: "소속",
-        url: "/uploads/13d9a794-dbdb-4e3a-9d71-41f66034d769.png",
-      });
-    }, 100);
+    axios({
+      method:'GET',
+      url : "/member/info/"+idx
+    }).then((res)=>{
+      setMember(res.data);
+    });
+
   },[idx]);
 
   return (
@@ -42,26 +39,26 @@ function MemberView(props) {
       <Box padding={5}>
         <Flex direction="column" gap={4}>
           <Box display="flex" justifyContent="center" alignContent="center">
-            {member.url ? (
+            {member.mem_profile ? (
               <Mask height={150} width={150} rounding="circle" wash>
                 <img
                   alt="weakendclub.com"
-                  src={`${SERVER_URL}${member.url}`}
+                  src={`${SERVER_URL}${member.mem_profile}`}
                   style={{ maxWidth: "100%", display: "block" }}
                 />
               </Mask>
             ) : (
               <Avatar
                 size="xl"
-                name={member.name}
+                name={member.mem_name}
               />
             )}
           </Box>
-          <Text><Datapoint title="이름" value={member.name}/></Text>
-          <Text><Datapoint title="아이디" value={member.id}/></Text>
-          <Text><Datapoint title="이메일" value={member.email}/></Text>
-          <Text><Datapoint title="생년월일" value={member.birth}/></Text>
-          <Text><Datapoint title="소속" value={member.affli}/></Text>
+          <Text><Datapoint title="이름" value={member.mem_name}/></Text>
+          <Text><Datapoint title="아이디" value={member.mem_id}/></Text>
+          <Text><Datapoint title="이메일" value={member.mem_email}/></Text>
+          <Text><Datapoint title="생년월일" value={member.mem_birth || ''}/></Text>
+          <Text><Datapoint title="소속" value={member.mem_affli || ''}/></Text>
 
           <Box flex="grow" paddingX={3} paddingY={3}>
             <Box
