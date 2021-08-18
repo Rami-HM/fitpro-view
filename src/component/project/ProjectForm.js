@@ -91,7 +91,7 @@ function ProjectForm(props) {
     
     await axios({
       method: "POST",
-      url: "/project/register",
+      url: "/project/insert",
       data
     }).then((res) => {
       let msg = res.data.error ? res.data.error : res.data.message;

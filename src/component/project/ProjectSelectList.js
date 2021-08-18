@@ -1,8 +1,12 @@
 import { React, useEffect, useState } from "react";
-import { Typeahead } from "gestalt";
+import { Typeahead,FixedZIndex, CompositeZIndex } from "gestalt";
 import { useSelector } from "react-redux";
 
 function ProjectSelectList(props) {
+
+  const HEADER_ZINDEX = new FixedZIndex(10);
+  const MODAL_ZINDEX = new CompositeZIndex([HEADER_ZINDEX]);
+  const TYPEAHEAD_ZINDEX = new CompositeZIndex([MODAL_ZINDEX]);
 
   const {handleSelect} = props;
 
@@ -52,6 +56,7 @@ function ProjectSelectList(props) {
         value={initValue.value}
         placeholder="프로젝트를 선택해 주세요"
         onSelect={onSelect}
+        zIndex={TYPEAHEAD_ZINDEX}
       />
     </>
   );

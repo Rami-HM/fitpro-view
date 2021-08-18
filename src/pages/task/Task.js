@@ -13,26 +13,19 @@ import { unstable_createMuiStrictModeTheme } from "@material-ui/core/styles";
 
 import { useDispatch } from "react-redux";
 import { actionCreators as projectAction } from "../../redux/modules/project";
-import ProjcetStatus from "../../component/common/ProjcetStatus";
 
 function Task() {
   const theme = unstable_createMuiStrictModeTheme();
 
   const [checked, setChecked] = useState(false);
 
-  const userSession = useSelector((state) => state.member.member);
   const dispatch = useDispatch();
 
-  const projectDetailAPI = async (selected) => {
+  const projectDetail = async (project) => {
+    console.log(project);
     try {
-      await axios({
-        method: "GET",
-        url: "/project/detail/" + selected.value + "/" + userSession.mem_idx,
-      }).then((res) => {
-        const newProject = res.data;
-        dispatch(projectAction.setProject(newProject));
-        setChecked(false);
-      });
+      dispatch(projectAction.getProject(Number(project.value)));
+      setChecked(false);
     } catch (error) {
       console.log(error);
     }
@@ -41,7 +34,7 @@ function Task() {
   return (
     <ThemeProvider theme={theme}>
       <Box column={12} marginBottom={3}>
-        <ProjectSelectList handleSelect={projectDetailAPI} />
+        <ProjectSelectList handleSelect={projectDetail} />
       </Box>
       <Box column={12} marginBottom={5} minHeight={50}>
         <Collapse in={checked} collapsedSize={50}>
@@ -49,14 +42,7 @@ function Task() {
         </Collapse>
       </Box>
       <Box column={12} marginBottom={5} minHeight="60vh">
-        <Module
-          icon="angled-pin"
-          iconAccessibilityLabel="taskList"
-          id="taskList"
-          title="할 일 목록"
-        >
-          <ProjectTaskList />
-        </Module>
+        <ProjectTaskList />
       </Box>
     </ThemeProvider>
   );

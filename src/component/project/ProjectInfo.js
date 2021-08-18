@@ -9,54 +9,42 @@ import { useDispatch } from "react-redux";
 import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function ProjectList(props) {
-  const { projectInfo, getProjectListAPI } = props;
+  const { projectInfo } = props;
 
   const userSession = useSelector((state) => state.member.member);
   const project = useSelector((state) => state.project.project);
 
   const dispatch = useDispatch();
 
-  const projectDetailAPI = async(projectId) => {
+  const projectDetail = async (prj_idx) => {
     try {
-      await axios({
-        method: "GET",
-        url: "/project/detail/" + projectId + "/" + userSession.mem_idx,
-      }).then((res) => {
-        const newProject = res.data;
-        dispatch(projectAction.setProject(newProject));
-        
-      });
+      dispatch(projectAction.getProject(prj_idx));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const changeProjectContents = async(idx) => {
-    await projectDetailAPI(idx);
+  const changeProjectContents = async (idx) => {
+    await projectDetail(idx);
   };
 
-  const modifyBookmark = async(bookmark,idx) =>{
+  const modifyBookmark = async (bookmark, idx) => {
     try {
       await axios({
         method: "PATCH",
         url: "/project/bookmark",
-        data : {
-          bookmark : bookmark,
-          prj_idx : idx,
-          mem_idx : userSession.mem_idx
-        }
+        data: {
+          bookmark: bookmark,
+          prj_idx: idx,
+          mem_idx: userSession.mem_idx,
+        },
       }).then((res) => {
-        dispatch(projectAction.modifyProjectList({
-          ...project,
-          bookmark: bookmark
-        }));
-        getProjectListAPI();
+        dispatch(projectAction.modifyBookmark(idx, bookmark));
       });
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   return (
     <div
@@ -67,23 +55,29 @@ function ProjectList(props) {
         <div className={"ALa ho-"}>
           <Box alignItems="center" display="flex" padding={3}>
             <Box column={2}>
-            <TapArea onTap={() => modifyBookmark(!projectInfo.bookmark, projectInfo.prj_idx)}>
-              {projectInfo.bookmark ? (
-                <StarIcon style={{ color: "orange" }} />
-              ) : (
-                <StarOutlineIcon style={{ color: "gray" }} />
-              )}
+              <TapArea
+                onTap={() =>
+                  modifyBookmark(!projectInfo.bookmark, projectInfo.prj_idx)
+                }
+              >
+                {projectInfo.bookmark ? (
+                  <StarIcon style={{ color: "orange" }} />
+                ) : (
+                  <StarOutlineIcon style={{ color: "gray" }} />
+                )}
               </TapArea>
             </Box>
             <TapArea
               rounding={4}
               onTap={() => changeProjectContents(projectInfo.prj_idx)}
             >
-              <Box column={10} maxHeight = {50} overflow="scrollY">
-                <Text weight="bold" >{projectInfo.prj_title}</Text>
+              <Box column={10} maxHeight={50} overflow="scrollY">
+                <Text weight="bold">{projectInfo.prj_title}</Text>
               </Box>
-              <Box column={10} marginTop = {1}>
-                <Text size="sm">{projectInfo.prj_start} ~ {projectInfo.prj_end}</Text>
+              <Box column={10} marginTop={1}>
+                <Text size="sm">
+                  {projectInfo.prj_start} ~ {projectInfo.prj_end}
+                </Text>
               </Box>
             </TapArea>
           </Box>

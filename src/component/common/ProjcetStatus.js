@@ -2,11 +2,14 @@ import React from "react";
 import { Status } from "gestalt";
 import { useSelector } from "react-redux";
 
-function ProjcetStatus() {
+function ProjcetStatus(props) {
+
+  const {sDate,eDate} = props; 
+
   const project = useSelector((state) => state.project.project);
 
-  const start_date = new Date(project.prj_start);
-  const end_date = new Date(project.prj_end);
+  const start_date = sDate ? new Date(sDate) : new Date(project.prj_start);
+  const end_date = eDate ? new Date(eDate) : new Date(project.prj_end);
 
   let info = {
     type: "unstarted",

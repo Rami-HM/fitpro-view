@@ -8,35 +8,34 @@ import axios from "../../config/axios/axios";
 
 //redux
 import { useDispatch } from "react-redux";
-import { actionCreators as projectAction } from "../../redux/modules/project";
+import { actionCreators as memberAction } from "../../redux/modules/member";
 
 
 function Project(props) {
   const [isProjectModal, setIsProjectModal] = useState(false);
 
   const projectList = useSelector((state) => state.project.projectList);
-  const userSession = useSelector((state) => state.member.member);
 
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    getTotMemberListAPI();
+  },[])
 
   const onDismiss = () => {
     setIsProjectModal(false);
   };
 
-  const getProjectListAPI = async () => {
-    try {
-      await axios({
+  const getTotMemberListAPI = async() =>{
+      axios({
         method: "GET",
-        url: "/project/list/" + userSession.mem_idx,
+        url: "/member/list",
       }).then((res) => {
-        if (res.data.length > 0) {
-          dispatch(projectAction.setProjectList(res.data));
-        }
+        const totmemberList = res.data;
+        console(totmemberList);
+        dispatch(memberAction.setTotMember(totmemberList));
       });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
   return (
     <>
@@ -56,12 +55,11 @@ function Project(props) {
             <Box column={12}>
               <ScrollBoundaryContainer height="80vh">
                 <Box padding={5}>
-                  {projectList.map((item, idx) => {
+                  {projectList.map((item) => {
                     return (
                       <ProjectInfo
                         projectInfo={item}
                         key={item.prj_idx}
-                        getProjectListAPI={getProjectListAPI}
                       />
                     );
                   })}

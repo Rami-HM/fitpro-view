@@ -46,7 +46,7 @@ function TaskProject(props) {
           <IconButton
             accessibilityLabel="Open the settings page"
             icon={checked ? "arrow-up" : "arrow-down"}
-            size="xs"
+            size="md"
             onClick={handleChange}
           />
         </Flex.Item>

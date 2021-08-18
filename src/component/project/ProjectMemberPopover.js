@@ -7,16 +7,16 @@ import axios from "../../config/axios/axios";
 import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function ProjectMemberPopover(props) {
+  const { projectAssignList, setProjectAssign } = props;
+
   const project = useSelector((state) => state.project.project);
   const userSession = useSelector((state) => state.member.member);
+  const memberList = useSelector((state) => state.member.totMemberList);
 
   const { anchorRef, onDismiss } = props;
 
-  const [assignProjectMemberList, setAssignProjectMemberList] = useState(
-    project.project_assign
-  );
-
-  const [memberList, setMemberList] = useState([]); //전체 사용자
+  const [assignProjectMemberList, setAssignProjectMemberList] =
+    useState(projectAssignList);
 
   const [notAssignProjectMemberList, setNotAssignProjectMemberList] = useState(
     []
@@ -25,40 +25,30 @@ function ProjectMemberPopover(props) {
   const [assign, setAssign] = useState(false);
   const [changeMember, setChangeMember] = useState();
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    if(userSession.mem_idx === project.readeridx)
-      getMemberList();
+    if (memberList && userSession.mem_idx === project.readeridx) getNotAssignMember();
 
-    return(()=>{
+    return () => {
       onDismiss();
-    })
+    };
   }, []);
 
   useEffect(() => {
     assign ? assignMember(changeMember) : notAssignMember(changeMember);
   }, [changeMember]);
 
-  const getMemberList = async () => {
-    axios({
-      method: "GET",
-      url: "/member/list",
-    }).then((res) => {
-      const totmemberList = res.data;
-      const filteringMemberList = totmemberList.filter((memberInfo) => {
-        return !assignProjectMemberList.some(
-          (projectMemberInfo) =>
-            projectMemberInfo.mem_idx === memberInfo.mem_idx
-        )
-          ? { ...memberInfo, readeryn: false }
-          : "";
-      });
-      setMemberList(totmemberList);
-      setNotAssignProjectMemberList(filteringMemberList);
+  const getNotAssignMember = async () => {
+    const filteringMemberList = memberList.filter((memberInfo) => {
+      return !assignProjectMemberList.some(
+        (projectMemberInfo) => projectMemberInfo.mem_idx === memberInfo.mem_idx
+      )
+        ? { ...memberInfo, readeryn: false }
+        : "";
     });
+    setNotAssignProjectMemberList(filteringMemberList);
   };
 
+  //배정 > 미배정
   const assignMember = async (changeMember) => {
     const newAssignMemberList = await assignProjectMemberList.filter(
       (member) => member.mem_idx !== changeMember.mem_idx
@@ -70,6 +60,8 @@ function ProjectMemberPopover(props) {
     setAssignProjectMemberList(newAssignMemberList);
     setNotAssignProjectMemberList(newNotAssignMemberList);
   };
+
+  //미배정 > 배정
   const notAssignMember = async (changeMember) => {
     if (changeMember == null) return;
     const newAssignMemberList = await [
@@ -92,13 +84,9 @@ function ProjectMemberPopover(props) {
         reg_mem_idx: userSession.mem_idx,
       },
     }).then(async (res) => {
-      const newProject = await {
-        ...project,
-        project_assign: res.data.data,
-      };
-      dispatch(projectAction.setProject(newProject));
-      dispatch(projectAction.modifyProjectList(newProject));
+      const data = res.data.data;
 
+      setProjectAssign(data);
       onDismiss();
     });
   };
@@ -145,7 +133,7 @@ function ProjectMemberPopover(props) {
           </Flex>
 
           <ProjectMemberList
-            assign = {true}
+            assign={true}
             list={assignProjectMemberList}
             title="배정된 팀원"
             setChangeMember={setChangeMember}
@@ -155,7 +143,7 @@ function ProjectMemberPopover(props) {
             /* 팀장일경우 */
             userSession.mem_idx === project.readeridx ? (
               <ProjectMemberList
-                assign = {false}
+                assign={false}
                 list={notAssignProjectMemberList}
                 title="미배정 팀원"
                 setChangeMember={setChangeMember}

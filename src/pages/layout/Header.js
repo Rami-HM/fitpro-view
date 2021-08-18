@@ -68,7 +68,7 @@ function Header(props) {
       }).then((res) => {
         if (res.data.length > 0) {
           dispatch(projectAction.setProjectList(res.data));
-          projectDetailAPI(res.data[0].prj_idx, member);
+          projectDetail(res.data[0].prj_idx);
         }
       });
     } catch (error) {
@@ -76,14 +76,9 @@ function Header(props) {
     }
   };
 
-  const projectDetailAPI = async(prj_idx, member) => {
+  const projectDetail = async(prj_idx) => {
     try {
-      axios({
-        method: "GET",
-        url: "/project/detail/" + prj_idx +"/"+ member.mem_idx,
-      }).then((res) => {
-        dispatch(projectAction.setProject(res.data));
-      });
+      dispatch(projectAction.getProject(prj_idx));
     } catch (error) {
       console.log(error);
     }

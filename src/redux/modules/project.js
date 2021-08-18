@@ -1,6 +1,9 @@
 const SET_PROJECT = "SET_PROJECT";
-const SET_PROJECTLIST = "SET_PROJECTLIST";
+const GET_PROJECT = "GET_PROJECT";
+const MODIFY_BOOKMARK = "MODIFY_BOOKMARK";
+
 const ADD_PROJECTLIST = "ADD_PROJECTLIST";
+const SET_PROJECTLIST = "SET_PROJECTLIST";
 const MODIFY_PROJECTLIST = "MODIFY_PROJECTLIST";
 
 const initialState = {
@@ -18,6 +21,10 @@ const reducer = (state = initialState, action) => {
       return applyAddProjectList(state, action);
     case MODIFY_PROJECTLIST:
       return applyModifyProject(state, action);
+    case GET_PROJECT:
+      return applyGetProject(state, action);
+    case MODIFY_BOOKMARK:
+      return applyModifyBookmark(state, action);
     default:
       return state;
   }
@@ -93,10 +100,62 @@ const applyModifyProject = (state, action) => {
   };
 };
 
+const modifyBookmark = (prj_idx,bookmark) => {
+  return {
+    type: MODIFY_BOOKMARK,
+    prj_idx,
+    bookmark
+  };
+};
+
+const applyModifyBookmark = (state, action) => {
+  const { projectList } = state;
+  const { prj_idx,bookmark } = action;
+
+  let targetProject = projectList.find((element, index, array) => element.prj_idx === prj_idx);
+  targetProject = {...targetProject, bookmark}
+
+  const nextProjectList = projectList.map((prev) =>
+    prev.prj_idx === targetProject.prj_idx ? targetProject : prev
+  );
+  //bookmark 순으로 정렬
+  nextProjectList.sort((obj1,obj2)=>{
+    const obj1Value = obj1.bookmark ? 1 : 0;
+    const obj2Value = obj2.bookmark ? 1 : 0;
+    return obj2Value - obj1Value
+  });
+
+  return {
+    ...state,
+    projectList: nextProjectList,
+  };
+};
+
+const getProject = (prj_idx) => {
+  return {
+    type: GET_PROJECT,
+    prj_idx,
+  };
+};
+
+const applyGetProject = (state, action) => {
+  const { projectList } = state;
+  const { prj_idx } = action;
+
+  const targetProject = projectList.find((element, index, array) => element.prj_idx === prj_idx);
+
+  return {
+    ...state,
+    project: targetProject,
+  };
+};
+
 export default reducer;
 export const actionCreators = {
   setProject,
   setProjectList,
   addProjectList,
   modifyProjectList,
+  getProject,
+  modifyBookmark
 };
