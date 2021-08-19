@@ -32,7 +32,6 @@ function Project(props) {
         url: "/member/list",
       }).then((res) => {
         const totmemberList = res.data;
-        console(totmemberList);
         dispatch(memberAction.setTotMember(totmemberList));
       });
     };
