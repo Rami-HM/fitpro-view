@@ -19,8 +19,9 @@ export async function isSessionToken() {
 }
 
 export async function logout() {
-  deleteSession("accessToken");
-  window.location.href = "/";
+  console.log("내");
+  // deleteSession("accessToken");
+  // window.location.href = "/";
 }
 
 export async function setSessionToken(response) {

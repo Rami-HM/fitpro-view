@@ -82,7 +82,7 @@ function Register(props) {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
-      result = res.data.data.files ? res.data.data.files[0] : "";
+      result = res.data.data.files;
     });
 
     return result;

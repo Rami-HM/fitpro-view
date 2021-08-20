@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Flex, Text, TextField, Avatar, Button } from "gestalt";
-import { SERVER_URL } from "../../config/constants/commonConts";
 import { useSelector } from "react-redux";
 import {
   resetValiFields,
@@ -24,6 +23,7 @@ const initMember = {
   mem_birth: "",
   mem_affil: "",
   mem_profile: "",
+  src: "",
 };
 
 function MemberForm(props) {
@@ -42,7 +42,7 @@ function MemberForm(props) {
     resetForm();
     setInputMember({ ...initMember, ...memberInfo });
     setPreviewURL(
-      memberInfo.mem_profile ? SERVER_URL + memberInfo.mem_profile : noImage
+      memberInfo.src ? memberInfo.src : noImage
     );
   }, []);
 
@@ -90,7 +90,7 @@ function MemberForm(props) {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
-      result = res.data.data.files ? res.data.data.files[0] : "";
+      result = res.data.data.files;
     });
 
     return result;
@@ -151,7 +151,6 @@ function MemberForm(props) {
               <Avatar
                 size="xl"
                 src={previewURL}
-                // src={`${SERVER_URL}${inputMember.mem_profile}`}
                 name={inputMember.mem_name}
               />
             </div>

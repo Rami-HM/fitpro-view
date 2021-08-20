@@ -7,57 +7,7 @@ import { useSelector } from "react-redux";
 import Confirm from "../../component/common/Confirm";
 import TaskForm from "../../component/task/TaskForm";
 import TaskSubForm from "../../component/task/TaskSubForm";
-
-const data = [
-  {
-    id: 1,
-    name: "a",
-    surname: "Baran",
-    birthYear: 1987,
-    birthCity: 63,
-    sex: "Male",
-    type: "adult",
-  },
-  {
-    id: 2,
-    name: "b",
-    surname: "Baran",
-    birthYear: 1987,
-    birthCity: 34,
-    sex: "Female",
-    type: "adult",
-    parentId: 1,
-  },
-  {
-    id: 3,
-    name: "c",
-    surname: "Baran",
-    birthYear: 1987,
-    birthCity: 34,
-    sex: "Female",
-    type: "child",
-    parentId: 1,
-  },
-  {
-    id: 5,
-    name: "e",
-    surname: "Baran",
-    birthYear: 1987,
-    birthCity: 34,
-    sex: "Female",
-    type: "child",
-  },
-  {
-    id: 6,
-    name: "",
-    surname: "Baran",
-    birthYear: 1987,
-    birthCity: 34,
-    sex: "Female",
-    type: "child",
-    parentId: 5,
-  },
-];
+import axios from "../../config/axios/axios";
 
 const columns = [
   { title: "메인 할일", field: "name" },
@@ -75,14 +25,48 @@ function ProjectTaskList() {
   const [isModal, setIsModal] = useState(false);
   const [isMain, setIsMain] = useState(false);
 
+  const [taskList, setTaskList] = useState([
+    {
+      fail_idx: "",
+      prj_idx: "",
+      reg_date: "",
+      reg_mem_idx: "",
+      task_end: "",
+      task_idx: "",
+      task_important: "",
+      task_memo: "",
+      task_start: "",
+      task_state: "",
+      task_title: "",
+      upper_task_idx: "",
+      upt_date: "",
+    },
+  ]);
+
+  const [mainTaskIdx, setMainTaskIdx] = useState();
+
+  const getTaskListAPI = () => {
+    axios({
+      method: "GET",
+      url: "/task/list/" + project.prj_idx,
+    }).then((res) => {
+      const result = res.data.data;
+      setTaskList(result);
+    });
+  };
+
   useEffect(() => {
-  }, [isModal]);
+    console.log(project);
+    //if (project) getTaskListAPI();
+  }, [project]);
 
   const showMainTaskModal = () => {
     setIsMain(true);
     setIsModal(true);
   };
-  const showSubTaskModal = () => {
+  const showSubTaskModal = (idx) => {
+    setMainTaskIdx(idx);
+
     setIsMain(false);
     setIsModal(true);
   };
@@ -97,7 +81,11 @@ function ProjectTaskList() {
             isMain ? (
               <TaskForm mode="Insert" onDismiss={() => setIsModal(false)} />
             ) : (
-              <TaskSubForm mode="Insert" onDismiss={() => setIsModal(false)} />
+              <TaskSubForm
+                mainTaskIdx={mainTaskIdx}
+                mode="Insert"
+                onDismiss={() => setIsModal(false)}
+              />
             )
           }
           footer={<></>}
@@ -125,9 +113,9 @@ function ProjectTaskList() {
             </Flex>
           </>
         }
-        data={data}
+        data={taskList}
         columns={columns}
-        parentChildData={(row, rows) => rows.find((a) => a.id === row.parentId)}
+        parentChildData={(row, rows) => rows.find((a) => a.task_idx === row.upper_task_idx)}
         options={{
           search: false,
           paging: false,
@@ -137,7 +125,7 @@ function ProjectTaskList() {
             icon: Add,
             iconProps: { fontSize: "small" },
             tooltip: "서브 할일 추가",
-            onClick: showSubTaskModal,
+            onClick: (event, rowData) => showSubTaskModal(rowData.id),
             hidden: rowData.parentId,
           }),
         ]}

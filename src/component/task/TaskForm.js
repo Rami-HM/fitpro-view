@@ -92,7 +92,6 @@ function TaskForm(props) {
   const registeProject = async () => {
     const list = getFailValidationList();
 
-    console.log(list);
     if (list.length !== 0) {
       setFailValidationList(list);
       return;

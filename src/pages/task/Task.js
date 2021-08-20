@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Module } from "gestalt";
 import ProjectSelectList from "../../component/project/ProjectSelectList";
 import { Collapse } from "@material-ui/core";
@@ -16,13 +16,11 @@ import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function Task() {
   const theme = unstable_createMuiStrictModeTheme();
-
   const [checked, setChecked] = useState(false);
 
   const dispatch = useDispatch();
 
   const projectDetail = async (project) => {
-    console.log(project);
     try {
       dispatch(projectAction.getProject(Number(project.value)));
       setChecked(false);

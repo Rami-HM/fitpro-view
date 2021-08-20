@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Image, Heading, Text, Flex, Avatar, Link } from "gestalt";
 import "../../resource/css/header.css";
-import { SERVER_URL } from "../../config/constants/commonConts";
 import MemberModal from "../member/MemberModal";
 import { useSelector } from "react-redux";
 import { isSessionToken, logout } from "../../actions/session/session";
 import noImage from "../../resource/image/noImage.png";
-import fitpro from "../../resource/image/FITPRO_text_logo.png";
 import axios from "../../config/axios/axios";
 //redux
 import { useDispatch } from "react-redux";
@@ -21,6 +19,7 @@ const initMember = {
   mem_birth: "",
   mem_affil: "",
   mem_profile: "",
+  src : '',
 };
 
 function Header(props) {
@@ -41,23 +40,11 @@ function Header(props) {
   }, []);
 
   const getMemberInfo = async () => {
-    // const member = await isSessionToken();
-    let member = {};
-    await axios({
-      method: "GET",
-      url: "/checkToken",
-    }).then((res) => {
-      if (res.isSuc) {
-        member = res.data;
-        dispatch(memberAction.setMember(member));
-        if (projectList.length === 0) {
-          getProjectListAPI(member);
-        }
-      } else {
-        logout();
-      }
-    });
-
+    const member = await isSessionToken();
+    dispatch(memberAction.setMember(member));
+    if (projectList.length === 0) {
+      getProjectListAPI(member);
+    }
   };
 
   const getProjectListAPI = async (member) => {
@@ -107,8 +94,8 @@ function Header(props) {
                   <Avatar
                     size="sm"
                     src={
-                      memberInfo.mem_profile
-                        ? `${SERVER_URL}${memberInfo.mem_profile}`
+                      memberInfo.src
+                        ? `${memberInfo.src}`
                         : noImage
                     }
                     name={memberInfo.mem_name || ""}

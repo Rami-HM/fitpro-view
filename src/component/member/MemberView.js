@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, Mask, Avatar, Button, Datapoint } from "gestalt";
-import { SERVER_URL } from "../../config/constants/commonConts";
 import axios from "../../config/axios/axios";
 
 function MemberView(props) {
@@ -13,6 +12,7 @@ function MemberView(props) {
     mem_birth: "",
     mem_affli: "",
     mem_profile: "",
+    src: "",
   });
 
   useEffect(() => {
@@ -39,11 +39,11 @@ function MemberView(props) {
       <Box padding={5}>
         <Flex direction="column" gap={4}>
           <Box display="flex" justifyContent="center" alignContent="center">
-            {member.mem_profile ? (
+            {member.src ? (
               <Mask height={150} width={150} rounding="circle" wash>
                 <img
-                  alt="weakendclub.com"
-                  src={`${SERVER_URL}${member.mem_profile}`}
+                  alt={member.name}
+                  src={`${member.src}`}
                   style={{ maxWidth: "100%", display: "block" }}
                 />
               </Mask>

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 // TOAST UI Editor import
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
-import { SERVER_URL } from "../../config/constants/commonConts";
+import { CDN_URL } from "../../config/constants/commonConts";
 import axios from "../../config/axios/axios";
 
 function TextEditor(props) {
@@ -31,7 +31,8 @@ function TextEditor(props) {
               data: formData,
               headers: { "Content-Type": "multipart/form-data" },
             }).then((res) => {
-              callback(`${SERVER_URL}` + res.data.data.files[0], blob.name);
+              console.log(res.data.data.files);
+              callback(`${CDN_URL}` + res.data.data.files, blob.name);
             });
           })();
 

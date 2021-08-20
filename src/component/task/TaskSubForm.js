@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   PageHeader,
   TextArea,
@@ -9,13 +9,24 @@ import {
   Flex,
 } from "gestalt";
 import { Tooltip, TextField } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "../../config/axios/axios";
 
+
 function TaskForm(props) {
-  const { mode, onDismiss } = props;
+  const { mode, onDismiss, mainTaskIdx } = props;
   const project = useSelector((state) => state.project.project);
   const userSession = useSelector((state) => state.member.member);
+
+  const [isFail, setIsFail] = useState(true);
+  const [isWriteFail, setIsWriteFail] = useState(true);
+
+  const [failReasonList, setFailReasonList] = useState([
+    {
+      label: "-",
+      value: "null",
+    },
+  ]);
 
   const [task, setTask] = useState({
     task_idx: "",
@@ -25,14 +36,44 @@ function TaskForm(props) {
     task_end: project.prj_end + "T23:59" || "9999-12-31T23:59",
     reg_mem_idx: "",
     prj_idx: "",
-    task_important: "",
-    task_status: "",
+    task_important: "O",
+    task_state: "SH",
+    upper_task_idx: mainTaskIdx,
+    fail_idx: "",
+    fail_contents: "",
   });
 
   useEffect(() => {
+    getFailReasonAPI();
+    
     if (mode === "Modify") {
     }
-  }, []);
+   }, []);
+   
+
+   const formatFailReason = (failReason) =>{
+    const result = failReason.map(item=>{
+      return({
+        label: item.fail_contents, value: item.fail_idx.toString()
+      });
+    });
+    return result;
+  }
+
+  const getFailReasonAPI = async() =>{
+    axios({
+      method : "GET",
+      url : '/fail/reason'
+    }).then((res)=>{
+      const result = res.data.data;
+      const formatReason = formatFailReason(result);
+      setFailReasonList([
+        ...failReasonList,
+        ...formatReason,
+        { label: "직접 입력", value: "add" },
+      ])
+    })
+  }
 
   const handleChange = (field) => (e) => {
     const value = e.target ? e.target.value : e.value;
@@ -43,25 +84,60 @@ function TaskForm(props) {
     };
 
     if (field === "task_start") {
-      
       //오늘 날짜보다 이후 일 경우 예정됨으로 변경
       if (new Date(value) > new Date()) {
         newTask = {
           ...newTask,
-          task_status: "SH",
+          task_state: "SH",
         };
+      }
+    }
+
+    if (field === "task_state") {
+      if (value === "PD" || value === "FL") {
+        setIsFail(false);
+      } else {
+        newTask = {
+          ...newTask,
+          fail_idx: "",
+          fail_contents: "",
+        };
+        setIsWriteFail(true);
+        setIsFail(true);
+      }
+    }
+
+    if (field === "fail_idx") {
+      if (value === "add") {
+        setIsWriteFail(false);
+      } else {
+        newTask = {
+          ...newTask,
+          fail_contents: "",
+        };
+        setIsWriteFail(true);
       }
     }
 
     setTask(newTask);
   };
 
-  const insertMainTask = () => {
+  const insertSubTask = () => {
+
     axios({
       method: "POST",
-      url: "/task/insert",
+      url: "/task/sub/insert",
       data: {
-        ...task,
+        task_title: task.task_title,
+        task_memo: task.task_memo,
+        task_start: task.task_start,
+        task_end: task.task_end,
+        task_important: task.task_important,
+        task_state: task.task_state,
+        upper_task_idx: task.upper_task_idx,
+        fail_idx: task.fail_idx,
+        fail_contents: task.fail_contents,
+
         reg_mem_idx: userSession.mem_idx,
         prj_idx: project.prj_idx,
       },
@@ -121,10 +197,10 @@ function TaskForm(props) {
               </Box>
             </Flex.Item>
             <Flex.Item>
-              <Box minWidth={250}>
+              <Box minWidth={200}>
                 <SelectList
-                  id="task_status"
-                  onChange={handleChange("task_status")}
+                  id="task_state"
+                  onChange={handleChange("task_state")}
                   options={[
                     { label: "예정됨", value: "SH" },
                     { label: "진행중", value: "PG" },
@@ -134,11 +210,40 @@ function TaskForm(props) {
                   ]}
                   label="진행상태"
                   size="md"
-                  value={task.task_status}
+                  value={task.task_state}
+                />
+              </Box>
+            </Flex.Item>
+            <Flex.Item>
+              <Box minWidth={340}>
+                <SelectList
+                  id="task_state"
+                  onChange={handleChange("fail_idx")}
+                  options={failReasonList}
+                  label="미처리 및 보류 사유"
+                  size="md"
+                  value={task.fail_idx}
+                  disabled={isFail}
                 />
               </Box>
             </Flex.Item>
           </Flex>
+        </Box>
+
+        <Box
+          flex="grow"
+          paddingX={3}
+          paddingY={3}
+          display={isWriteFail ? "none" : "block"}
+        >
+          <GTextField
+            id="fail_contents"
+            label="미처리 및 보류 사유"
+            placeholder="사유를 입력 하세요"
+            helperText="작성하신 사유는 자동으로 저장 됩니다."
+            onChange={handleChange("fail_contents")}
+            value={task.fail_contents}
+          ></GTextField>
         </Box>
 
         <Box flex="grow" paddingX={3} paddingY={3}>
@@ -208,7 +313,7 @@ function TaskForm(props) {
               color="red"
               size="lg"
               type="button"
-              onClick={insertMainTask}
+              onClick={insertSubTask}
             />
           </Box>
         </Box>

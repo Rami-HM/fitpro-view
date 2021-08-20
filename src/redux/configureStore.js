@@ -5,6 +5,7 @@ import { createBrowserHistory as createHistory } from "history";
 import { composeWithDevTools } from "redux-devtools-extension";
 import member from "./modules/member";
 import project from "./modules/project";
+import fail from "./modules/fail";
 
 const env = process.env.NODE_ENV;
 
@@ -24,6 +25,7 @@ const reducer = combineReducers({
   router: connectRouter(history),
   member,
   project,
+  fail,
 });
 
 let store;
