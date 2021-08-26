@@ -1,7 +1,7 @@
 const SET_FAILREASON = "SET_FAILREASON";
 
 const initialState = {
-  failReason:[]
+  failReason:[{label: "-", value: "-"}]
 };
 
 const reducer = (state = initialState, action) => {

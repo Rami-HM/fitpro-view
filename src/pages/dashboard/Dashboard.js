@@ -2,28 +2,28 @@ import React, { useState, useEffect } from "react";
 import DashboardContents from "./DashboardContents";
 import { Box } from "gestalt";
 import ProjectSelectList from "../../component/project/ProjectSelectList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function DashboardTitle() {
-  const [project, setProject] = useState({
-    id: 0,
-    title: "No data",
-    subTitle: "No data",
-    progress: 0,
-    startDate: "0001-01-01",
-    endDate: "9999-12-31",
-  });
-  useEffect(() => {
-    //   console.log("dashboard ---- ")
-    //   console.log(project);
-  }, [project]);
+  const dispatch = useDispatch();
+
+  // 해당 프로젝트를 redux 저장
+  const projectDetail = async (project) => {
+    try {
+      dispatch(projectAction.getProject(Number(project.value)));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       <Box column={12} marginBottom={5}>
-        <ProjectSelectList setProject={setProject} project={project} />
+        <ProjectSelectList handleSelect={projectDetail} />
       </Box>
-      <DashboardContents project={project} />
+      <DashboardContents />
     </>
   );
 }

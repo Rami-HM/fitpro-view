@@ -1,36 +1,45 @@
 import React, { useState } from "react";
-import { Box,Icon,Image} from "gestalt";
+import { Image, Icon } from "gestalt";
 import "../../resource/css/sidebar.css";
 import Logo from "../../resource/image/FITPRO.gif";
+import { Link } from "react-router-dom";
 
 function SideMenu(props) {
-
   return (
     <>
       <div className="sideNav">
         <div className="sideNavBox">
-          <button className="row" id="home">
-            <div className="icon icon-transparent">
-              <Image src={Logo} 
-              alt = "fitpro Logo"
-              naturalHeight = {100}
-              naturalWidth = {100}
-              />
-            </div>
-            <h2 className="sideNavText">Home</h2>
-          </button>
-          <button className="row">
-            <div className="icon" />
-            <h2 className="sideNavText">Following</h2>
-          </button>
-          <button className="row">
-            <div className="icon" />
-            <h2 className="sideNavText">Explore</h2>
-          </button>
-          <button className="row">
-            <div className="icon"/>
-            <h2 className="sideNavText">Profile</h2>
-          </button>
+          <Link to="/">
+            <button className="row" id="home">
+              <div className="icon icon-transparent">
+                <Image
+                  src={Logo}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
+              <h2 className="sideNavText">FITPRO</h2>
+            </button>
+          </Link>
+          <Link to="/project">
+            <button className="row">
+              <div className="icon"></div>
+              <h2 className="sideNavText">Project</h2>
+            </button>
+          </Link>
+          <Link to="/project/task">
+            <button className="row">
+              <div className="icon" />
+              <h2 className="sideNavText">Task</h2>
+            </button>
+          </Link>
+          <Link to="/task">
+            <button className="row">
+              <div className="icon" />
+              <h2 className="sideNavText">My Task</h2>
+            </button>
+          </Link>
           <div className="divider" />
           <button className="row">
             <div className="icon" />

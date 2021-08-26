@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Text, Mask, Avatar, Button, Datapoint } from "gestalt";
+import {
+  Box,
+  Flex,
+  Text,
+  Mask,
+  Avatar,
+  Button,
+  Datapoint,
+  Card,
+} from "gestalt";
 import axios from "../../config/axios/axios";
 
 function MemberView(props) {
@@ -17,13 +26,12 @@ function MemberView(props) {
 
   useEffect(() => {
     axios({
-      method:'GET',
-      url : "/member/info/"+idx
-    }).then((res)=>{
+      method: "GET",
+      url: "/member/info/" + idx,
+    }).then((res) => {
       setMember(res.data);
     });
-
-  },[idx]);
+  }, [idx]);
 
   return (
     <Box
@@ -37,29 +45,34 @@ function MemberView(props) {
       direction="column"
     >
       <Box padding={5}>
-        <Flex direction="column" gap={4}>
-          <Box display="flex" justifyContent="center" alignContent="center">
-            {member.src ? (
-              <Mask height={150} width={150} rounding="circle" wash>
-                <img
-                  alt={member.name}
-                  src={`${member.src}`}
-                  style={{ maxWidth: "100%", display: "block" }}
-                />
-              </Mask>
-            ) : (
-              <Avatar
-                size="xl"
-                name={member.mem_name}
-              />
-            )}
-          </Box>
-          <Text><Datapoint title="이름" value={member.mem_name}/></Text>
-          <Text><Datapoint title="아이디" value={member.mem_id}/></Text>
-          <Text><Datapoint title="이메일" value={member.mem_email}/></Text>
-          <Text><Datapoint title="생년월일" value={member.mem_birth || ''}/></Text>
-          <Text><Datapoint title="소속" value={member.mem_affli || ''}/></Text>
-
+        <Flex gap={10}>
+          <Flex.Item marginEnd={5}>
+            <Card
+              image={
+                  <Avatar size = "xl" name={member.mem_name} src = {member.src}/>
+              }
+            >
+              <Text align="center" weight="bold">
+                <Box paddingX={3} paddingY={2}>
+                  {member.mem_name}
+                </Box>
+              </Text>
+            </Card>
+          </Flex.Item>
+          <Flex.Item>
+            <Text>
+              <Datapoint title="아이디" value={member.mem_id} />
+            </Text>
+            <Text>
+              <Datapoint title="이메일" value={member.mem_email} />
+            </Text>
+            <Text>
+              <Datapoint title="생년월일" value={member.mem_birth || ""} />
+            </Text>
+            <Text>
+              <Datapoint title="소속" value={member.mem_affil || ""} />
+            </Text>
+          </Flex.Item>
           <Box flex="grow" paddingX={3} paddingY={3}>
             <Box
               justifyContent="end"
@@ -70,9 +83,6 @@ function MemberView(props) {
               display="flex"
               wrap
             >
-              <Box paddingX={1} paddingY={1}>
-                <Button text="Cancel" size="lg" onClick={onDismiss} />
-              </Box>
             </Box>
           </Box>
         </Flex>

@@ -280,32 +280,32 @@ td {
  * animation pulsate-bck
  * ----------------------------------------
  */
- @-webkit-keyframes pulsate-bck {
+@-webkit-keyframes pulsate-bck {
   0% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
   50% {
     -webkit-transform: scale(0.9);
-            transform: scale(0.9);
+    transform: scale(0.9);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 @keyframes pulsate-bck {
   0% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
   50% {
     -webkit-transform: scale(0.9);
-            transform: scale(0.9);
+    transform: scale(0.9);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 
@@ -323,10 +323,8 @@ td {
   animation: pulsate-bck 0.5s ease-in-out infinite both;
 }
 
-
-
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -337,6 +335,118 @@ td {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
+}
+
+.align-left td:nth-child(2) {
+  text-align: left;
+}
+
+.hgt-50px {
+  height: 50px;
+}
+
+/* treeList css */
+.row-selected {
+  background-color: #f2f1ff;
+}
+
+.tgrid {
+  border: none;
+}
+
+.row-indent {
+  display: inline-block;
+  width: 20px;
+  height: 10px;
+}
+
+.tgrid-header-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+.tgrid-column-header {
+  border-right: none;
+  border-bottom: 1px solid #e6e6e6;
+  text-align: center;
+  position: relative;
+  padding-top: 5px;
+}
+
+.tgrid-column-header-text-wrapper {
+  padding: 0.5em 0.75em;
+  display: inline-block;
+  color: #a8a8a8;
+  font-weight: 400;
+  width: 95%;
+}
+
+.tgrid-column-header-text {
+  float: none;
+  width: calc(100% - 10px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resize-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+}
+
+.tgrid-data-cell {
+  padding-top: 20px;
+}
+
+.i-dummy {
+  display: none;
+}
+
+.txt-red {
+  color: red;
+}
+.txt-orange {
+  color: orange;
+}
+.txt-green {
+  color: green;
+}
+.txt-blue {
+  color: blue;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.fs-09em input {
+  font-size: 0.9em;
+}
+
+.non-baseline .MuiInput-underline.Mui-disabled:before {
+  border: none;
+}
+
+.non-baseline .MuiInput-underline:before {
+  border: none;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.max-wdt-400 {
+  max-width: 400px;
+}
+
+.max-wdt-600 {
+  max-width: 600px;
 }

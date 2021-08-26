@@ -6,6 +6,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import member from "./modules/member";
 import project from "./modules/project";
 import fail from "./modules/fail";
+import toast from "./modules/toast";
 
 const env = process.env.NODE_ENV;
 
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   member,
   project,
   fail,
+  toast,
 });
 
 let store;

@@ -8,12 +8,12 @@ import {
 } from "../../actions/validation/validation";
 import axios from "../../config/axios/axios";
 import noImage from "../../resource/image/noImage.png";
-import {isSessionToken, logout} from '../../actions/session/session';
+import { isSessionToken, logout } from "../../actions/session/session";
 
 //redux
 import { useDispatch } from "react-redux";
 import { actionCreators as memberAction } from "../../redux/modules/member";
-
+import { actionCreators as ToastAction } from "../../redux/modules/toast";
 
 const initMember = {
   mem_id: "",
@@ -37,13 +37,11 @@ function MemberForm(props) {
   const [previewURL, setPreviewURL] = useState("");
 
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     resetForm();
     setInputMember({ ...initMember, ...memberInfo });
-    setPreviewURL(
-      memberInfo.src ? memberInfo.src : noImage
-    );
+    setPreviewURL(memberInfo.src ? memberInfo.src : noImage);
   }, []);
 
   const resetForm = () => {
@@ -103,11 +101,9 @@ function MemberForm(props) {
       data: {
         ...inputMember,
         mem_birth: new Date(inputMember.mem_birth),
-        mem_profile: mem_profile_info
+        mem_profile: mem_profile_info,
       },
     }).then(async (res) => {
-      let msg = res.data.error ? res.data.error : res.data.message;
-      alert(msg);
 
       const member = await isSessionToken();
       dispatch(memberAction.setMember(member));
@@ -144,15 +140,11 @@ function MemberForm(props) {
       <Box padding={5}>
         <Flex direction="column" gap={4}>
           <Box display="flex" justifyContent="end" alignContent="center">
-              <Button text="로그아웃" size="sm" onClick = {logout}/>
+            <Button text="로그아웃" size="sm" onClick={logout} />
           </Box>
           <Box display="flex" justifyContent="center" alignContent="center">
             <div onClick={onImageClick}>
-              <Avatar
-                size="xl"
-                src={previewURL}
-                name={inputMember.mem_name}
-              />
+              <Avatar size="xl" src={previewURL} name={inputMember.mem_name} />
             </div>
             <input
               type="file"

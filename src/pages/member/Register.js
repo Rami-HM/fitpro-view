@@ -8,6 +8,8 @@ import {
   getFailValidationList,
   handleValidation,
 } from "../../actions/validation/validation";
+import { useDispatch } from "react-redux";
+import { actionCreators as ToastAction } from "../../redux/modules/toast";
 
 function Register(props) {
   const { onDismiss } = props;
@@ -23,6 +25,8 @@ function Register(props) {
   });
 
   const [failValidationList, setFailValidationList] = useState([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     resetForm();
@@ -99,11 +103,12 @@ function Register(props) {
         mem_profile: mem_profile_info,
       },
     }).then((res) => {
-      let msg = res.data.error ? res.data.error : res.data.message;
-      alert(msg);
       // setContents(msg);
       // setIsAlert(true);
-      if (!res.data.error) onDismiss();
+      if (res.isSuc) {
+        dispatch(ToastAction.showToast(res.data.message));
+        onDismiss();
+      }
     });
   };
 

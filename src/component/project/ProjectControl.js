@@ -30,7 +30,8 @@ function ProjectControl(props) {
       )}
       {isDeleteConfirm ? (
         <Confirm
-          onDismiss={() => setIsDeleteConfirm(false)}
+          // onDismiss={() => setIsDeleteConfirm(false)}
+          onDismiss={onClick}
           title={DELETE_TITLE}
           contents={DELETE_CONTENTS}
           onClick={onClick}

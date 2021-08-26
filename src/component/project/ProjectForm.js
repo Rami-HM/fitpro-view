@@ -94,9 +94,7 @@ function ProjectForm(props) {
       url: "/project/insert",
       data
     }).then((res) => {
-      let msg = res.data.error ? res.data.error : res.data.message;
-      alert(msg);
-      if (!res.data.error) {
+      if (res.isSuc) {
         dispatch(projectAction.addProjectList(res.data.data));
         onDismiss();
       }
@@ -118,9 +116,7 @@ function ProjectForm(props) {
       url: "/project/modify/"+project.prj_idx,
       data
     }).then((res) => {
-      let msg = res.data.error ? res.data.error : res.data.message;
-      alert(msg);
-      if (!res.data.error) {
+      if (res.isSuc) {
         const newProject = res.data.data;
         
         dispatch(projectAction.setProject(newProject));

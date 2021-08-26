@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import ProjcetStatus from "../../component/common/ProjcetStatus";
 
-function TaskProject(props) {
+function ProjectView(props) {
   const { checked, setChecked } = props;
   const project = useSelector((state) => state.project.project);
 
@@ -65,4 +65,4 @@ function TaskProject(props) {
   );
 }
 
-export default TaskProject;
+export default ProjectView;

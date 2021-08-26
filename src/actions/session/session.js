@@ -1,4 +1,5 @@
 import axios from "../../config/axios/axios";
+import { useSelector } from "react-redux";
 
 export async function isSessionToken() {
   let result = {};
@@ -19,9 +20,8 @@ export async function isSessionToken() {
 }
 
 export async function logout() {
-  console.log("내");
-  // deleteSession("accessToken");
-  // window.location.href = "/";
+  deleteSession("accessToken");
+  window.location.href = "/";
 }
 
 export async function setSessionToken(response) {

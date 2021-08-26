@@ -21,7 +21,7 @@ function ProjcetStatus(props) {
     info = {
       type: "unstarted",
       day:
-        Math.floor(
+        Math.round(
           (start_date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
         ) + "일 뒤 시작",
       msg: "예정됨",
@@ -30,7 +30,7 @@ function ProjcetStatus(props) {
     info = {
       type: "inProgress",
       day:
-        Math.floor(
+        Math.round(
           (end_date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
         ) + "일 남음",
       msg: "진행중",

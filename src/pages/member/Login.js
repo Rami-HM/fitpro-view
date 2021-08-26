@@ -107,11 +107,10 @@ function Login(props) {
       if (response.isSuc) {
         setSessionToken(response);
         //setSessionUser(response);
-        dispatch(memberAction.setMember(response.data.member));
         redirect(props, "/");
       } else {
         setContents(response.data.error);
-        setIsAlert(true);
+        //setIsAlert(true);
       }
     });
   };
