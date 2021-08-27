@@ -12,6 +12,7 @@ import { unstable_createMuiStrictModeTheme } from "@material-ui/core/styles";
 
 import { useDispatch } from "react-redux";
 import { actionCreators as projectAction } from "../../redux/modules/project";
+import { actionCreators as failAction } from "../../redux/modules/fail";
 
 function ProjectTask() {
   const theme = unstable_createMuiStrictModeTheme();
@@ -26,6 +27,35 @@ function ProjectTask() {
       console.log(error);
     }
   };
+
+    // 미처리 및 보류 사유 목록 API
+  // redux에 FailReason 으로 저장
+  const getFailReasonAPI = async () => {
+    axios({
+      method: "GET",
+      url: "/fail/reason",
+    }).then((res) => {
+      const result = res.data.data;
+      const formatReason = result.map((item) => {
+        return {
+          label: item.fail_contents,
+          value: item.fail_idx.toString(),
+        };
+      });
+
+      dispatch(
+        failAction.setFailReason([
+          { label: "-", value: "-" },
+          ...formatReason,
+          { label: "직접 입력", value: "add" },
+        ])
+      );
+    });
+  };
+
+  useEffect(()=>{
+    getFailReasonAPI();
+  },[]);
 
   return (
     <ThemeProvider theme={theme}>

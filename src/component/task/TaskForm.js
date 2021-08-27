@@ -53,7 +53,7 @@ function TaskForm(props) {
     prj_idx: "",
     task_important: "O",
     task_state: "SH",
-    upper_task_idx: upperTaskIdx,
+    upper_task_idx: upperTaskIdx ? upperTaskIdx.toString() : '',
     fail_idx: "",
     fail_contents: "",
   };

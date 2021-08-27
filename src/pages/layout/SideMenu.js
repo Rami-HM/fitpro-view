@@ -40,7 +40,7 @@ function SideMenu(props) {
               <h2 className="sideNavText">My Task</h2>
             </button>
           </Link>
-          <div className="divider" />
+          {/* <div className="divider" />
           <button className="row">
             <div className="icon" />
             <h2 className="sideNavText">Projects</h2>
@@ -54,7 +54,7 @@ function SideMenu(props) {
               <img src="https://picsum.photos/200/300/?random" />
             </div>
             <h2 className="sideNavText">New Life Recipes</h2>
-          </button>
+          </button> */}
         </div>
       </div>
     </>

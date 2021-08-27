@@ -31,16 +31,18 @@ function TaskForm(props) {
   ]);
 
   // mount > redux > props
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    if (project.hasOwnProperty("prj_idx")) getMainTaskListAPI();
+    if (project.hasOwnProperty("prj_idx")) {
+      getMainTaskListAPI();
+    }
   }, [project]);
-  
+
   useEffect(() => {
-    disabledFailReason(task.task_state);
-    getMainTaskDetail(mainTaskList);
+    if (task.task_idx !== "") {
+      disabledFailReason(task.task_state);
+    }
   }, [task]);
 
   const disabledFailReason = (value) => {
@@ -52,7 +54,7 @@ function TaskForm(props) {
     }
   };
 
-  const getMainTaskListAPI = async (prj_idx) => {
+  const getMainTaskListAPI = async () => {
     await axios({
       method: "GET",
       url: "/task/main/list/" + project.prj_idx,
@@ -63,6 +65,7 @@ function TaskForm(props) {
       });
       setMainTaskList(result);
       setFormatMainTaskList(formatMainTaskList);
+      getMainTaskDetail(result);
     });
   };
 
