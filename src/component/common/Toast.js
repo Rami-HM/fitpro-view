@@ -14,7 +14,7 @@ import { actionCreators as ToastAction } from "../../redux/modules/toast";
 
 function Toast() {
   /* ======= Z-INDEX  ======= */
-  const PAGE_HEADER_ZINDEX = new FixedZIndex(99);
+  const PAGE_HEADER_ZINDEX = new FixedZIndex(9999);
   const SHEET_ZINDEX = new CompositeZIndex([PAGE_HEADER_ZINDEX]);
 
   const isShow = useSelector((state) => state.toast.isShow);

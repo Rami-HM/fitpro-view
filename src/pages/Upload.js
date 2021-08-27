@@ -16,10 +16,10 @@ function Upload() {
     console.log(picture);
   };
 
-  const uploadImg = async() => {
+  const uploadImg = async () => {
     let formData = new FormData();
-    
-    pictures.forEach(element => {
+
+    pictures.forEach((element) => {
       formData.append("file", element);
     });
     debugger;
@@ -34,6 +34,22 @@ function Upload() {
     });
   };
 
+  const [inputList, setInputList] = useState([]);
+
+  const inputComp = () => {
+    return (
+      <div>
+        <input type="text"></input>
+      </div>
+    );
+  };
+
+  const onClick = () =>{
+    const newInputList = [...inputList,inputComp()];
+    setInputList(newInputList);
+
+  }
+
   return (
     <>
       <ImageUploader
@@ -45,6 +61,19 @@ function Upload() {
         singleImage={true}
       />
       <Button inline color="blue" text="sand" onClick={uploadImg} />
+
+      <div>
+      {
+        inputList.map((item)=>item)
+      }
+
+      </div>
+      <a
+        href="#"
+        onClick={onClick}
+      >
+        hkhkhkhk{" "}
+      </a>
     </>
   );
 }

@@ -12,7 +12,7 @@ import { Help } from '@material-ui/icons';
 
 function DashboardContents(props) {
   const project = useSelector((state) => state.project.project);
-  const [lastDay, setLastDay] = useState(0);
+  const [lastDay, setLastDay] = useState("0");
 
   useEffect(() => {
     if (project.hasOwnProperty("prj_idx")) {

@@ -242,11 +242,12 @@ function TaskForm(props) {
       dispatch(ToastAction.showToast(res.data.message));
 
       const result = res.data.data;
+
       if (data.fail_idx === "add") {
         addFailReason(data.fail_contents, res.data.data.fail_idx);
       }
-
       const newTaskList = [...taskList, { ...result, id: result.task_idx }];
+
       setTaskList(newTaskList);
 
       onDismiss();

@@ -32,7 +32,6 @@ function TaskForm(props) {
 
   // mount > redux > props
   useEffect(() => {
-    console.log(task);
   }, []);
 
   useEffect(() => {
@@ -40,7 +39,6 @@ function TaskForm(props) {
   }, [project]);
   
   useEffect(() => {
-    console.log(task);
     disabledFailReason(task.task_state);
     getMainTaskDetail(mainTaskList);
   }, [task]);
@@ -72,9 +70,6 @@ function TaskForm(props) {
     const mainTaskDetail = await list.find(
       (item) => item.task_idx.toString() === task.upper_task_idx
     );
-    console.log(task);
-    console.log(task.upper_task_idx);
-    console.log(mainTaskDetail);
     setMainTask(mainTaskDetail);
   };
 
