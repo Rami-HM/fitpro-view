@@ -1,5 +1,5 @@
-export const SERVER_URL = 'http://127.0.0.1';
-//export const SERVER_URL = 'https://fitpro-server.herokuapp.com';
+//export const SERVER_URL = 'http://127.0.0.1';
+export const SERVER_URL = 'https://fitpro-server.herokuapp.com';
 export const CDN_URL = "http://res.cloudinary.com/hd4m2sihx/image/upload"
 
 export const DELETE_TITLE ='삭제 하시겠습니까?';
