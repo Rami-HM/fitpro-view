@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "../../config/axios/axios";
 import TreeList from "react-treelist";
 import "react-treelist/build/css/index.css";
-import ProjcetStatus from "../../component/common/ProjcetStatus";
+import StatusComp from "../../component/common/StatusComp";
 import MemberModal from "../member/MemberModal";
 
 import TaskModal from "./TaskModal";
@@ -42,6 +42,14 @@ function ProjectTaskList() {
 
   const [memberIdx, setMemberIdx] = useState();
   const [modalFlag, setModalFlag] = useState();
+
+  const [options, setOptions] = useState({
+    minimumColWidth: 100,
+    expandAll: true,
+    rowClass: "align-left hgt-50px",
+    canSelect: true,
+    expandAll: true,
+  });
 
   const getTaskListAPI = () => {
     axios({
@@ -99,7 +107,7 @@ function ProjectTaskList() {
 
   const processComp = (row, rows) => {
     if (!rows.upper_task_idx)
-      return <ProjcetStatus sDate={rows.task_start} eDate={rows.task_end} />;
+      return <StatusComp sDate={rows.task_start} eDate={rows.task_end} />;
 
     return row;
   };
@@ -154,19 +162,21 @@ function ProjectTaskList() {
             columns={[
               {
                 title: (
-                  <Tooltip inline text="메인 할일 추가" idealDirection="down">
-                    <IconButton
-                      icon="duplicate"
-                      size="md"
-                      accessibilityLabel="add"
-                      inline
-                      onClick={() => showModal("MAIN")()}
-                    />
-                  </Tooltip>
+                  <>
+                    <Tooltip inline text="메인 할일 추가" idealDirection="down">
+                      <IconButton
+                        icon="duplicate"
+                        size="sm"
+                        accessibilityLabel="add"
+                        inline
+                        onClick={() => showModal("MAIN")()}
+                      />
+                    </Tooltip>
+                  </>
                 ),
                 field: "upper_task_idx",
                 type: "string",
-                width: "70px",
+                width: "80px",
                 class: "display-inline-block",
                 formatter: (row, rows) => taskAddButton(row, rows),
               },
@@ -211,12 +221,7 @@ function ProjectTaskList() {
                 formatter: (row, rows) => workerComp(row, rows),
               },
             ]}
-            options={{
-              minimumColWidth: 100,
-              expandAll: true,
-              rowClass: "align-left hgt-50px",
-              canSelect: true,
-            }}
+            options={options}
             id={"task_idx"}
             parentId={"upper_task_idx"}
           ></TreeList>

@@ -9,7 +9,7 @@ import {
   TapArea,
 } from "gestalt";
 import { Tooltip, TextField } from "@material-ui/core";
-import ProjectStatus from "../../component/common/ProjcetStatus";
+import StatusComp from "../../component/common/StatusComp";
 
 function TaskMainForm(props) {
   const { failValidationList, handleValidation, task, setTask } = props;
@@ -86,7 +86,7 @@ function TaskMainForm(props) {
           </Flex.Item>
           <Flex.Item>
             <Box maxWidth={250}>
-              <ProjectStatus sDate={task.task_start} eDate={task.task_end} />
+              <StatusComp sDate={task.task_start} eDate={task.task_end} />
             </Box>
           </Flex.Item>
         </Flex>

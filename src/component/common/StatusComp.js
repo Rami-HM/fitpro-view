@@ -2,9 +2,9 @@ import React from "react";
 import { Status } from "gestalt";
 import { useSelector } from "react-redux";
 
-function ProjcetStatus(props) {
+function StatusComp(props) {
 
-  const {sDate,eDate} = props; 
+  const {sDate,eDate,state} = props; 
 
   const project = useSelector((state) => state.project.project);
 
@@ -35,14 +35,26 @@ function ProjcetStatus(props) {
         ) + "일 남음",
       msg: "진행중",
     };
-  else if (end_date <= new Date())
+  else if (end_date <= new Date()){
     info = {
       type: "ok",
       day: "",
       msg: "완료됨",
     };
+    if(state)
+      if(state === 'SH' || state === 'PG')
+      {
+        info = {
+          type: "warning",
+          day: Math.round(
+            (new Date().getTime() - end_date.getTime()) / (1000 * 60 * 60 * 24)
+          ) + "일 지연됨",
+          msg: "기간 지연",
+        };
+      }
+  }
 
   return <Status type={info.type} title={info.msg} subtext={info.day} />;
 }
 
-export default ProjcetStatus;
+export default StatusComp;

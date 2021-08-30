@@ -9,6 +9,8 @@ import Upload from "./Upload";
 import Project from "./project/Project";
 import ProjectTask from "./task/ProjectTask";
 import Task from "./task/Task";
+import Calendar from "./calendar/Calendar";
+import GanttTask from "./gantt/GanttTask";
 
 import Toast from '../component/common/Toast';
 
@@ -29,6 +31,8 @@ function App() {
         component={ProjectTask}
       />
       <PrivateRoute exact nomalLayout path="/task" component={Task} />
+      <PrivateRoute exact nomalLayout path="/calendar" component={Calendar} />
+      <PrivateRoute exact nomalLayout path="/gantt" component={GanttTask} />
       <LoginRoute exact path="/login" component={Login} />
       <PublicRoute exact path="/upload" component={Upload} />
       <PublicRoute component={() => "Not Found"} />

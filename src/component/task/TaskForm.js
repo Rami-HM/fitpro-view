@@ -67,6 +67,11 @@ function TaskForm(props) {
     }
   }, []);
 
+  useEffect(()=>{
+    
+    console.log('mainTask',mainTask);
+  },[mainTask])
+
   //유효성 검사에서 통과하지 못한 Input 태그의 에니메이션 효과 노출 후 제거
   useEffect(() => {
     if (failValidationList.length !== 0) {
@@ -146,7 +151,6 @@ function TaskForm(props) {
       else insertMainTask();
     } else if (modalFlag === "SUB") {
       // 프로젝트 날짜 유효성 추가
-      console.log(mainTask);
       const checkDateResult = checkTaskDate(
         task,
         mainTask.task_start,

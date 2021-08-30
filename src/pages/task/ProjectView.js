@@ -4,7 +4,7 @@ import { Viewer } from "@toast-ui/react-editor";
 
 import { useSelector } from "react-redux";
 
-import ProjcetStatus from "../../component/common/ProjcetStatus";
+import StatusComp from "../../component/common/StatusComp";
 
 function ProjectView(props) {
   const { checked, setChecked } = props;
@@ -36,7 +36,7 @@ function ProjectView(props) {
               </Flex.Item>
               <Flex.Item>
                 <Box marginStart={4}>
-                  <ProjcetStatus />
+                  <StatusComp />
                 </Box>
               </Flex.Item>
             </Flex>

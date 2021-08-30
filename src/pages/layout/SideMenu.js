@@ -40,8 +40,20 @@ function SideMenu(props) {
               <h2 className="sideNavText">My Task</h2>
             </button>
           </Link>
-          {/* <div className="divider" />
-          <button className="row">
+          <div className="divider" />
+          <Link to="/calendar">
+            <button className="row">
+              <div className="icon" />
+              <h2 className="sideNavText">Calendar</h2>
+            </button>
+          </Link>
+          <Link to="/gantt">
+            <button className="row">
+              <div className="icon" />
+              <h2 className="sideNavText">Gantt</h2>
+            </button>
+          </Link>
+          {/* <button className="row">
             <div className="icon" />
             <h2 className="sideNavText">Projects</h2>
           </button>

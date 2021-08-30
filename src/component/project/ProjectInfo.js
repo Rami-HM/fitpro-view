@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { actionCreators as projectAction } from "../../redux/modules/project";
 
 function ProjectList(props) {
-  const { projectInfo } = props;
+  const { projectInfo, readonly } = props;
 
   const userSession = useSelector((state) => state.member.member);
   const project = useSelector((state) => state.project.project);
@@ -54,19 +54,23 @@ function ProjectList(props) {
       <Box rounding={4} marginBottom={5}>
         <div className={"ALa ho-"}>
           <Box alignItems="center" display="flex" padding={3}>
-            <Box column={2}>
-              <TapArea
-                onTap={() =>
-                  modifyBookmark(!projectInfo.bookmark, projectInfo.prj_idx)
-                }
-              >
-                {projectInfo.bookmark ? (
-                  <StarIcon style={{ color: "orange" }} />
-                ) : (
-                  <StarOutlineIcon style={{ color: "gray" }} />
-                )}
-              </TapArea>
-            </Box>
+            {readonly ? (
+              <></>
+            ) : (
+              <Box column={2}>
+                <TapArea
+                  onTap={() =>
+                    modifyBookmark(!projectInfo.bookmark, projectInfo.prj_idx)
+                  }
+                >
+                  {projectInfo.bookmark ? (
+                    <StarIcon style={{ color: "orange" }} />
+                  ) : (
+                    <StarOutlineIcon style={{ color: "gray" }} />
+                  )}
+                </TapArea>
+              </Box>
+            )}
             <TapArea
               rounding={4}
               onTap={() => changeProjectContents(projectInfo.prj_idx)}

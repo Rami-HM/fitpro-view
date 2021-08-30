@@ -152,6 +152,11 @@ td {
 .hgt-100-chd div {
   height: 100%;
 }
+
+.hgt-84-chd div {
+  height: 84%;
+}
+
 .hgt-25-chd div {
   height: 25%;
 }
@@ -429,6 +434,10 @@ td {
   font-size: 0.9em;
 }
 
+.fs-08em input {
+  font-size: 0.8em;
+}
+
 .non-baseline .MuiInput-underline.Mui-disabled:before {
   border: none;
 }
@@ -449,4 +458,19 @@ td {
 
 .max-wdt-600 {
   max-width: 600px;
+}
+
+/* fullCalendar*/
+.fullcalendar .fc-button.fc-prev-button, .fullcalendar .fc-button.fc-next-button{
+  background:#605fb9;
+  border : 0;
+}
+
+.fullcalendar .fc-button.fc-today-button{
+  background:#60aaa9;
+  border : 0;
+}
+
+#chart_div {
+  overflow-x: scroll;
 }

@@ -31,7 +31,10 @@ function TaskForm(props) {
   ]);
 
   // mount > redux > props
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if(task.upper_task_idx)
+      getMainTaskDetail(mainTaskList);
+  }, [task]);
 
   useEffect(() => {
     if (project.hasOwnProperty("prj_idx")) {
@@ -73,6 +76,8 @@ function TaskForm(props) {
     const mainTaskDetail = await list.find(
       (item) => item.task_idx.toString() === task.upper_task_idx
     );
+    console.log(list);
+    console.log(mainTaskDetail, task.upper_task_idx)
     setMainTask(mainTaskDetail);
   };
 
