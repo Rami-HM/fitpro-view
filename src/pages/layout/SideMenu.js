@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Image, Icon } from "gestalt";
 import "../../resource/css/sidebar.css";
 import Logo from "../../resource/image/FITPRO.gif";
+import Mytask from "../../resource/image/menu/mytask.svg";
+import Project from "../../resource/image/menu/project-management-svg-svg.svg";
+import Task from "../../resource/image/menu/task.svg";
+import Calendar from "../../resource/image/menu/calendar.svg";
+import Gantt from "../../resource/image/menu/gantt-chart.svg";
 import { Link } from "react-router-dom";
 
 function SideMenu(props) {
@@ -24,32 +29,67 @@ function SideMenu(props) {
           </Link>
           <Link to="/project">
             <button className="row">
-              <div className="icon"></div>
+              <div className="icon icon-transparent">
+                <Image
+                  src={Project}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
               <h2 className="sideNavText">Project</h2>
             </button>
           </Link>
           <Link to="/project/task">
             <button className="row">
-              <div className="icon" />
+              <div className="icon icon-transparent">
+                <Image
+                  src={Task}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
               <h2 className="sideNavText">Task</h2>
             </button>
           </Link>
           <Link to="/task">
             <button className="row">
-              <div className="icon" />
+              <div className="icon  icon-transparent">
+                <Image
+                  src={Mytask}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
               <h2 className="sideNavText">My Task</h2>
             </button>
           </Link>
           <div className="divider" />
           <Link to="/calendar">
             <button className="row">
-              <div className="icon" />
+              <div className="icon icon-transparent">
+                <Image
+                  src={Calendar}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
               <h2 className="sideNavText">Calendar</h2>
             </button>
           </Link>
           <Link to="/gantt">
             <button className="row">
-              <div className="icon" />
+              <div className="icon  icon-transparent">
+                <Image
+                  src={Gantt}
+                  alt="fitpro Logo"
+                  naturalHeight={100}
+                  naturalWidth={100}
+                />
+              </div>
               <h2 className="sideNavText">Gantt</h2>
             </button>
           </Link>

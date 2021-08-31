@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Module, Box, SegmentedControl } from "gestalt";
+import { Module, Box, Tabs } from "gestalt";
 import TimeLine from "react-gantt-timeline";
 
 import axios from "../../config/axios/axios";
@@ -81,7 +81,7 @@ const taskFields = {
   startDate: "sdate",
   endDate: "edate",
   duration: "duration",
-  durationUnit: "durationunit",
+  // durationUnit: "durationunit",
   parentID: "upper_idx",
 };
 
@@ -99,17 +99,17 @@ function GanttTask() {
       url: "/gantt/list/" + userSession.mem_idx,
     }).then((res) => {
       const result = res.data.data;
+      const newTaskList = result.map((r) => {
+        const { sdate, edate, duration } = r;
 
-      const newTaskList = result.map(item=>{
-        const newSdate =  new Date(item.sdate);
-        const newEdate =  new Date(item.edate);
-
-        console.log(item.idx, ' :: ', newSdate,' :: ', newEdate);
-        return({...item,sdate:newSdate, edate: newEdate});
+        return {
+          ...r,
+          tempSDate: sdate,
+          tempEDate: edate,
+          tempDuration: duration,
+        };
       });
-
-      console.log(newTaskList);
-
+      console.log("newTaskList :", newTaskList);
       setTaskList(newTaskList);
     });
   };
@@ -122,54 +122,94 @@ function GanttTask() {
     console.log("taskList", taskList);
   }, [userSession]);
 
-  const rowDataBound = (args) => {
-    if (args.data.taskData.important === "O")
-      args.row.style.backgroundColor = "red";
-    else if (args.data.taskData.important === "A")
-      args.row.style.backgroundColor = "orange";
-    else if (args.data.taskData.important === "B")
-      args.row.style.backgroundColor = "blue";
-    else if (args.data.taskData.important === "C")
-      args.row.style.backgroundColor = "green";
-  };
-
   const customizeCell = (args) => {
-    console.log(args);
-    // if(args.data.taskData.important === 'O')
-    //   args.cell.style.backgroundColor = "red";
-    // else if(args.data.taskData.important === 'A')
-    //   args.cell.style.backgroundColor = "orange";
-    // else if(args.data.taskData.important === 'B')
-    //   args.cell.style.backgroundColor = "blue";
-    // else if(args.data.taskData.important === 'C')
-    //   args.cell.style.backgroundColor = "green";
+    args.data.ganttProperties.duration = args.data.taskData.tempDuration;
+    args.data.ganttProperties.startDate = new Date(
+      args.data.taskData.tempSDate
+    );
+    args.data.ganttProperties.endDate = new Date(args.data.taskData.tempEDate);
   };
 
-  const formatOption = { type: 'dateTime', format: 'yyyy-MM-dd hh:mm a' };
-  const timelineSettings = {
-      timelineViewMode: 'Week'
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [timelineSettings, setTimelineSettings] = React.useState({
+    timelineViewMode: "Week",
+  });
+
+  const handleChange = ({ activeTabIndex, event }) => {
+    event.preventDefault();
+    setActiveIndex(activeTabIndex);
+    console.log(activeTabIndex);
+    setTimelineSettings(activeTabIndex === 0 ? {
+      timelineViewMode: "Week",
+    } : {
+      timelineUnitSize: 65,
+      topTier: {
+        unit: "Day",
+        format: "MMM dd, yyyy",
+      },
+      bottomTier: {
+        unit: "Hour",
+        format: "hh:mm a",
+      },
+    });
   };
-  const timelineSettings2 = {
-    timelineUnitSize: 65,
-    topTier: {
-        unit: 'Day',
-        format: 'MMM dd, yyyy'
-    },
-    bottomTier: {
-        unit: 'Hour',
-        format: 'hh:mm a'
-    }
-  };
-const dayWorkingTime = [{ from: 0, to: 24 }];
+
+  useEffect(()=>{
+    console.log(timelineSettings);
+  },[timelineSettings])
+
+  const tabs = [{ text: "주 단위" }, { text: "시간 단위" }];
+
+  const dayWorkingTime = [{ from: 0, to: 24 }];
   return (
     <Module>
       <Box minHeight="80vh" maxWidth="90vw">
-        <GanttComponent timezone = "Asia/Seoul" dayWorkingTime={dayWorkingTime} timelineSettings  = {timelineSettings} splitterSettings = {{columnIndex: 4}} dataSource={taskList} taskFields={taskFields}>
+        <Tabs
+          activeTabIndex={activeIndex}
+          onChange={handleChange}
+          tabs={tabs}
+        />
+        <GanttComponent
+          dayWorkingTime={dayWorkingTime}
+          queryCellInfo={customizeCell}
+          timelineSettings={timelineSettings}
+          splitterSettings={{ columnIndex: 3 }}
+          dataSource={taskList}
+          taskFields={taskFields}
+          durationUnit={"minute"}
+        >
           <ColumnsDirective>
-            <ColumnDirective field="id"></ColumnDirective>
-            <ColumnDirective field="title"  headerText='Job Name' width='250'></ColumnDirective>
-            <ColumnDirective field="sdate" format={formatOption}></ColumnDirective>
-            <ColumnDirective field="edate" format={formatOption}></ColumnDirective>
+            <ColumnDirective
+              field="title"
+              headerText="제목"
+              width="300"
+            ></ColumnDirective>
+            <ColumnDirective
+              field="sdate"
+              headerText="시작일"
+              width="250"
+              formatter={(_, row) => {
+                const { tempSDate } = row.taskData;
+                return tempSDate;
+              }}
+            ></ColumnDirective>
+            <ColumnDirective
+              field="edate"
+              headerText="종료일"
+              width="250"
+              formatter={(_, row) => {
+                const { tempEDate } = row.taskData;
+                return tempEDate;
+              }}
+            ></ColumnDirective>
+            <ColumnDirective
+              field="duration"
+              headerText="기간(분 단위)"
+              formatter={(_, row) => {
+                const { tempDuration } = row.taskData;
+                return tempDuration;
+              }}
+            />
           </ColumnsDirective>
         </GanttComponent>
       </Box>
