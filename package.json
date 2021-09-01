@@ -65,7 +65,6 @@
     "build": "node --max_old_space_size=5120 node_modules/.bin/react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "parcel build ./public/index.html"
   },
   "eslintConfig": {
     "extends": [
