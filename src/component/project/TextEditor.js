@@ -10,7 +10,8 @@ function TextEditor(props) {
   const editorRef = useRef();
 
   useEffect(()=>{
-    editorRef.current.getInstance().setMarkdown(contents);
+    if(editorRef.current.getInstance().getMarkdown() === '' )
+      editorRef.current.getInstance().setMarkdown(contents,false);
   },[contents])
 
   //이미지를 자동으로 base64로 변환을
