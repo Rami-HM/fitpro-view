@@ -49,3 +49,11 @@ export const classState = (state) => {
 
   return <Status type={info.type} title={info.msg}/>;
 };
+
+export const convertMinutes = (num) =>{
+  let d = Math.floor(num/1440); // 60*24
+  let h = Math.floor((num-(d*1440))/60);
+  let m = Math.round(num%60);
+
+  return (d>0 ? d+ "일 " : "") + (h>0 ? h+ "시간 " : "") + (m>0 ? m+ "분 " : "");
+}
