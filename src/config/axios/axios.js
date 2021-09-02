@@ -64,7 +64,7 @@ instance.interceptors.response.use(
     let data = response.data;
     let isSuc = false;
 
-    if (data.statusCode === 403)
+    if (data.statusCode === 401)
       // token 만료
       logout();
 
