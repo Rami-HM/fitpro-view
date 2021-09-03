@@ -1,12 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
 import { Box, Flex } from "gestalt";
 import "gestalt/dist/gestalt.css";
+import  {useSelector} from 'react-redux';
 
 function Layout({ children }) {
-  useEffect(()=>{
-  },[]);
+  const [isLogin, setIsLogin] = useState(false);
+
+  const member = useSelector(state => state.member.member);
+
+
+  useEffect(() => {
+    console.log('member',member);
+    if(member)
+      setIsLogin(true);
+  }, [member])
+
   return (
     <Box display="flex">
       <Box>
@@ -21,7 +31,11 @@ function Layout({ children }) {
           </div>
         </Box>
         <Box>
-          <Box padding={7}>{children}</Box>
+          <Box padding={7}>
+            {
+              isLogin ? children : <></>
+            }
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -9,11 +9,13 @@ import { useSelector } from "react-redux";
 import {
   GanttComponent,
   ColumnsDirective,
-  ColumnDirective,Inject, Toolbar 
+  ColumnDirective,
+  Inject,
+  Toolbar,
 } from "@syncfusion/ej2-react-gantt";
 import "./gantt.css";
 
-import {convertMinutes} from '../../util/common';
+import { convertMinutes } from "../../util/common";
 
 const taskFields = {
   id: "id",
@@ -62,6 +64,12 @@ function GanttTask() {
     args.data.ganttProperties.endDate = new Date(args.data.taskData.tempEDate);
   };
 
+  const rowDataBound = (args) => {
+    if (!args.data["upper_idx"]) {
+      args.row.style.background = "#f2f2f2";
+    }
+  };
+
   const dayWorkingTime = [{ from: 0, to: 24 }];
   return (
     <Module>
@@ -72,13 +80,14 @@ function GanttTask() {
           splitterSettings={{ columnIndex: 3 }}
           dataSource={taskList}
           taskFields={taskFields}
-          toolbar={['ZoomIn', 'ZoomOut', 'ZoomToFit']}
+          toolbar={["ZoomIn", "ZoomOut", "ZoomToFit"]}
           durationUnit={"minute"}
+          rowDataBound={rowDataBound}
         >
           <ColumnsDirective>
             <ColumnDirective
               field="title"
-              headerText="제목"
+              headerText=" "
               width="300"
             ></ColumnDirective>
             <ColumnDirective
@@ -109,7 +118,7 @@ function GanttTask() {
               }}
             />
           </ColumnsDirective>
-          <Inject services={[Toolbar]}/>
+          <Inject services={[Toolbar]} />
         </GanttComponent>
       </Box>
     </Module>
